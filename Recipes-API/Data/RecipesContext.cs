@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Recipes_API;
 
 namespace Recipes_API
 {
@@ -17,6 +18,7 @@ namespace Recipes_API
 
         public virtual DbSet<Ingredient> Ingredients { get; set; }
         public virtual DbSet<Measurement> Measurements { get; set; }
+        public virtual DbSet<OwnedIngredient> OwnedIngredients { get; set; }
         public virtual DbSet<Recipe> Recipes { get; set; }
         public virtual DbSet<RecipeIngredient> RecipeIngredients { get; set; }
         public virtual DbSet<RecipeTool> RecipeTools { get; set; }
@@ -117,6 +119,24 @@ namespace Recipes_API
                     .HasConstraintName("recipe_ingredient_recipe_id_fkey");
             });
 
+            modelBuilder.Entity<OwnedIngredient>(entity =>
+            {
+                entity.HasKey(e => new { e.OwnedIngredientId })
+                    .HasName("owned_ingredient_pkey");
+
+                entity.ToTable("owned_ingredient");
+
+                entity.Property(e => e.OwnedIngredientId)
+                    .HasColumnName("owned_ingredient_id")
+                    .ValueGeneratedOnAdd();
+
+                entity.Property(e => e.IngredientId)
+                    .HasColumnName("ingredient_id")
+                    .ValueGeneratedOnAdd();
+
+                entity.Property(e => e.Quantity).HasColumnName("quantity");
+            });
+
             modelBuilder.Entity<RecipeTool>(entity =>
             {
                 entity.HasKey(e => new { e.RecipeId, e.ToolId })
@@ -163,5 +183,7 @@ namespace Recipes_API
         }
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+
+        public DbSet<Recipes_API.OwnedIngredient> OwnedIngredient { get; set; }
     }
 }

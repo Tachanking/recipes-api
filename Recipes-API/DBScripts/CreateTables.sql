@@ -18,13 +18,19 @@ CREATE TABLE recipe_tool (
 CREATE TABLE measurement (
 	measurement_id SERIAL PRIMARY KEY,
 	measurement_name VARCHAR(64) NOT NULL,
-	measurement_symbol VARCHAR(8) NOT NULL
+	measurement_symbol VARCHAR(8)
 );
 
 CREATE TABLE ingredient (
 	ingredient_id SERIAL PRIMARY KEY,
 	measurement_id SERIAL REFERENCES measurement,
 	ingredient_name VARCHAR(64) NOT NULL
+);
+
+CREATE TABLE owned_ingredient (
+	owned_ingredient_id SERIAL PRIMARY KEY,
+	ingredient_id SERIAL REFERENCES measurement,
+	quantity INTEGER NOT NULL
 );
 
 CREATE TABLE recipe_ingredient (

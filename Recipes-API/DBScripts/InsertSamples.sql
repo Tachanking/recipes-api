@@ -11,10 +11,15 @@ INSERT INTO recipe_tool (recipe_id, tool_id, quantity) VALUES (1, 1, 1);
 -- MEASUREMENTS
 INSERT INTO measurement (measurement_name, measurement_symbol) VALUES ('Gram', 'g');
 INSERT INTO measurement (measurement_name, measurement_symbol) VALUES ('Liter', 'L');
+INSERT INTO measurement (measurement_name, measurement_symbol) VALUES ('Count', '');
 
 -- INGREDIENTS
 INSERT INTO ingredient (measurement_id, ingredient_name) VALUES (1, 'Cereal');
 INSERT INTO ingredient (measurement_id, ingredient_name) VALUES (2, 'Milk');
+
+-- OWNED INGREDIENTS
+INSERT INTO owned_ingredient (ingredient_id, quantity) VALUES (1, 3000);
+INSERT INTO owned_ingredient (ingredient_id, quantity) VALUES (2, 2);
 
 -- RECIPE_INGREDIENT
 INSERT INTO recipe_ingredient (recipe_id, ingredient_id, quantity) VALUES (1, 1, 300);
