@@ -2,13 +2,13 @@
 
 namespace Recipes_API
 {
-    public partial class PostgresContext : DbContext
+    public partial class RecipesContext : DbContext
     {
-        public PostgresContext()
+        public RecipesContext()
         {
         }
 
-        public PostgresContext(DbContextOptions<PostgresContext> options)
+        public RecipesContext(DbContextOptions<RecipesContext> options)
             : base(options)
         {
         }

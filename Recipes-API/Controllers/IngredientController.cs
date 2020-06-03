@@ -22,7 +22,7 @@ namespace Recipes_API.Controllers
         public IEnumerable<Ingredients> Get()
         {
             IEnumerable<Ingredients> ingredients;
-            using (var context = new PostgresContext())
+            using (var context = new RecipesContext())
             {
                 ingredients = context.Ingredients.ToList();
             }
