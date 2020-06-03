@@ -29,11 +29,12 @@ namespace Recipes_API
             if (!optionsBuilder.IsConfigured)
             {
 
-// TODO #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
                 optionsBuilder.UseNpgsql("Host=localhost;Database=postgres;Username=postgres;Password=postgres");
             }
         }
 
+        // TODO: entities config in seperate files
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasPostgresExtension("adminpack");
@@ -103,6 +104,10 @@ namespace Recipes_API
                 entity.Property(e => e.IngredientId)
                     .HasColumnName("ingredient_id")
                     .ValueGeneratedOnAdd();
+
+                entity.Property(e => e.IsOptional)
+                    .HasColumnName("is_optional")
+                    .HasDefaultValue(false);
 
                 entity.Property(e => e.Quantity).HasColumnName("quantity");
 
