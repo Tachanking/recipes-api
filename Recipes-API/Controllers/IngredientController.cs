@@ -19,9 +19,9 @@ namespace Recipes_API.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<Ingredients> Get()
+        public IEnumerable<Ingredient> GetIngredients()
         {
-            IEnumerable<Ingredients> ingredients;
+            IEnumerable<Ingredient> ingredients;
             using (var context = new RecipesContext())
             {
                 ingredients = context.Ingredients.ToList();

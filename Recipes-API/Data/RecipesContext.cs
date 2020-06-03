@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Recipes_API
 {
@@ -13,17 +15,19 @@ namespace Recipes_API
         {
         }
 
-        public virtual DbSet<Ingredients> Ingredients { get; set; }
-        public virtual DbSet<Measurements> Measurements { get; set; }
-        public virtual DbSet<RecipeIngredients> RecipeIngredients { get; set; }
-        public virtual DbSet<RecipeTools> RecipeTools { get; set; }
-        public virtual DbSet<Recipes> Recipes { get; set; }
-        public virtual DbSet<Tools> Tools { get; set; }
+        public virtual DbSet<Ingredient> Ingredients { get; set; }
+        public virtual DbSet<Measurement> Measurements { get; set; }
+        public virtual DbSet<Recipe> Recipes { get; set; }
+        public virtual DbSet<RecipeIngredient> RecipeIngredients { get; set; }
+        public virtual DbSet<RecipeTool> RecipeTools { get; set; }
+        public virtual DbSet<Tool> Tools { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
+
+// TODO #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
                 optionsBuilder.UseNpgsql("Host=localhost;Database=postgres;Username=postgres;Password=postgres");
             }
         }
@@ -32,12 +36,9 @@ namespace Recipes_API
         {
             modelBuilder.HasPostgresExtension("adminpack");
 
-            modelBuilder.Entity<Ingredients>(entity =>
+            modelBuilder.Entity<Ingredient>(entity =>
             {
-                entity.HasKey(e => e.IngredientId)
-                    .HasName("ingredients_pkey");
-
-                entity.ToTable("ingredients");
+                entity.ToTable("ingredient");
 
                 entity.Property(e => e.IngredientId).HasColumnName("ingredient_id");
 
@@ -51,18 +52,15 @@ namespace Recipes_API
                     .ValueGeneratedOnAdd();
 
                 entity.HasOne(d => d.Measurement)
-                    .WithMany(p => p.Ingredients)
+                    .WithMany(p => p.Ingredient)
                     .HasForeignKey(d => d.MeasurementId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("ingredients_measurement_id_fkey");
+                    .HasConstraintName("ingredient_measurement_id_fkey");
             });
 
-            modelBuilder.Entity<Measurements>(entity =>
+            modelBuilder.Entity<Measurement>(entity =>
             {
-                entity.HasKey(e => e.MeasurementId)
-                    .HasName("measurements_pkey");
-
-                entity.ToTable("measurements");
+                entity.ToTable("measurement");
 
                 entity.Property(e => e.MeasurementId).HasColumnName("measurement_id");
 
@@ -77,12 +75,24 @@ namespace Recipes_API
                     .HasMaxLength(8);
             });
 
-            modelBuilder.Entity<RecipeIngredients>(entity =>
+            modelBuilder.Entity<Recipe>(entity =>
+            {
+                entity.ToTable("recipe");
+
+                entity.Property(e => e.RecipeId).HasColumnName("recipe_id");
+
+                entity.Property(e => e.RecipeName)
+                    .IsRequired()
+                    .HasColumnName("recipe_name")
+                    .HasMaxLength(64);
+            });
+
+            modelBuilder.Entity<RecipeIngredient>(entity =>
             {
                 entity.HasKey(e => new { e.RecipeId, e.IngredientId })
-                    .HasName("recipe_ingredients_pkey");
+                    .HasName("recipe_ingredient_pkey");
 
-                entity.ToTable("recipe_ingredients");
+                entity.ToTable("recipe_ingredient");
 
                 entity.Property(e => e.RecipeId)
                     .HasColumnName("recipe_id")
@@ -95,24 +105,24 @@ namespace Recipes_API
                 entity.Property(e => e.Quantity).HasColumnName("quantity");
 
                 entity.HasOne(d => d.Ingredient)
-                    .WithMany(p => p.RecipeIngredients)
+                    .WithMany(p => p.RecipeIngredient)
                     .HasForeignKey(d => d.IngredientId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("recipe_ingredients_ingredient_id_fkey");
+                    .HasConstraintName("recipe_ingredient_ingredient_id_fkey");
 
                 entity.HasOne(d => d.Recipe)
-                    .WithMany(p => p.RecipeIngredients)
+                    .WithMany(p => p.RecipeIngredient)
                     .HasForeignKey(d => d.RecipeId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("recipe_ingredients_recipe_id_fkey");
+                    .HasConstraintName("recipe_ingredient_recipe_id_fkey");
             });
 
-            modelBuilder.Entity<RecipeTools>(entity =>
+            modelBuilder.Entity<RecipeTool>(entity =>
             {
                 entity.HasKey(e => new { e.RecipeId, e.ToolId })
-                    .HasName("recipe_tools_pkey");
+                    .HasName("recipe_tool_pkey");
 
-                entity.ToTable("recipe_tools");
+                entity.ToTable("recipe_tool");
 
                 entity.Property(e => e.RecipeId)
                     .HasColumnName("recipe_id")
@@ -125,39 +135,21 @@ namespace Recipes_API
                 entity.Property(e => e.Quantity).HasColumnName("quantity");
 
                 entity.HasOne(d => d.Recipe)
-                    .WithMany(p => p.RecipeTools)
+                    .WithMany(p => p.RecipeTool)
                     .HasForeignKey(d => d.RecipeId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("recipe_tools_recipe_id_fkey");
+                    .HasConstraintName("recipe_tool_recipe_id_fkey");
 
                 entity.HasOne(d => d.Tool)
-                    .WithMany(p => p.RecipeTools)
+                    .WithMany(p => p.RecipeTool)
                     .HasForeignKey(d => d.ToolId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("recipe_tools_tool_id_fkey");
+                    .HasConstraintName("recipe_tool_tool_id_fkey");
             });
 
-            modelBuilder.Entity<Recipes>(entity =>
+            modelBuilder.Entity<Tool>(entity =>
             {
-                entity.HasKey(e => e.RecipeId)
-                    .HasName("recipes_pkey");
-
-                entity.ToTable("recipes");
-
-                entity.Property(e => e.RecipeId).HasColumnName("recipe_id");
-
-                entity.Property(e => e.RecipeName)
-                    .IsRequired()
-                    .HasColumnName("recipe_name")
-                    .HasMaxLength(64);
-            });
-
-            modelBuilder.Entity<Tools>(entity =>
-            {
-                entity.HasKey(e => e.ToolId)
-                    .HasName("tools_pkey");
-
-                entity.ToTable("tools");
+                entity.ToTable("tool");
 
                 entity.Property(e => e.ToolId).HasColumnName("tool_id");
 

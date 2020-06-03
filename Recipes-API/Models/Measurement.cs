@@ -3,17 +3,17 @@ using System.Collections.Generic;
 
 namespace Recipes_API
 {
-    public partial class Measurements
+    public partial class Measurement
     {
-        public Measurements()
+        public Measurement()
         {
-            Ingredients = new HashSet<Ingredients>();
+            Ingredient = new HashSet<Ingredient>();
         }
 
         public int MeasurementId { get; set; }
         public string MeasurementName { get; set; }
         public string MeasurementSymbol { get; set; }
 
-        public virtual ICollection<Ingredients> Ingredients { get; set; }
+        public virtual ICollection<Ingredient> Ingredient { get; set; }
     }
 }
