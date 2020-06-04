@@ -11,8 +11,8 @@ namespace Recipes_API
             RecipeTool = new HashSet<RecipeTool>();
         }
 
-        public int RecipeId { get; set; }
-        public string RecipeName { get; set; }
+        public int Id { get; set; }
+        public string Name { get; set; }
 
         public virtual ICollection<RecipeIngredient> RecipeIngredient { get; set; }
         public virtual ICollection<RecipeTool> RecipeTool { get; set; }

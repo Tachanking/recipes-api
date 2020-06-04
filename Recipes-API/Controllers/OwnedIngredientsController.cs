@@ -47,7 +47,7 @@ namespace Recipes_API.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutOwnedIngredient(int id, OwnedIngredient ownedIngredient)
         {
-            if (id != ownedIngredient.OwnedIngredientId)
+            if (id != ownedIngredient.Id)
             {
                 return BadRequest();
             }
@@ -82,7 +82,7 @@ namespace Recipes_API.Controllers
             _context.OwnedIngredient.Add(ownedIngredient);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(PostOwnedIngredient), new { id = ownedIngredient.OwnedIngredientId }, ownedIngredient);
+            return CreatedAtAction(nameof(PostOwnedIngredient), new { id = ownedIngredient.Id }, ownedIngredient);
         }
 
         // DELETE: api/OwnedIngredients/5
@@ -103,7 +103,7 @@ namespace Recipes_API.Controllers
 
         private bool OwnedIngredientExists(int id)
         {
-            return _context.OwnedIngredient.Any(e => e.OwnedIngredientId == id);
+            return _context.OwnedIngredient.Any(e => e.Id == id);
         }
     }
 }

@@ -7,12 +7,12 @@ namespace Recipes_API.Data
     {
         public void Configure(EntityTypeBuilder<OwnedIngredient> builder)
         {
-            builder.HasKey(e => new { e.OwnedIngredientId })
+            builder.HasKey(e => new { e.Id })
                 .HasName("owned_ingredient_pkey");
 
             builder.ToTable("owned_ingredient");
 
-            builder.Property(e => e.OwnedIngredientId)
+            builder.Property(e => e.Id)
                 .HasColumnName("owned_ingredient_id")
                 .ValueGeneratedOnAdd();
 

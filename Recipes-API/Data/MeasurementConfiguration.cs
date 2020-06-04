@@ -9,14 +9,14 @@ namespace Recipes_API.Data
         {
             builder.ToTable("measurement");
 
-            builder.Property(e => e.MeasurementId).HasColumnName("measurement_id");
+            builder.Property(e => e.Id).HasColumnName("measurement_id");
 
-            builder.Property(e => e.MeasurementName)
+            builder.Property(e => e.Name)
                 .IsRequired()
                 .HasColumnName("measurement_name")
                 .HasMaxLength(64);
 
-            builder.Property(e => e.MeasurementSymbol)
+            builder.Property(e => e.Symbol)
                 .IsRequired()
                 .HasColumnName("measurement_symbol")
                 .HasMaxLength(8);

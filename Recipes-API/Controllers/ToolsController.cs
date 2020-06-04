@@ -47,7 +47,7 @@ namespace Recipes_API.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutTool(int id, Tool tool)
         {
-            if (id != tool.ToolId)
+            if (id != tool.Id)
             {
                 return BadRequest();
             }
@@ -82,7 +82,7 @@ namespace Recipes_API.Controllers
             _context.Tools.Add(tool);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(PostTool), new { id = tool.ToolId }, tool);
+            return CreatedAtAction(nameof(PostTool), new { id = tool.Id }, tool);
         }
 
         // DELETE: api/Tools/5
@@ -103,7 +103,7 @@ namespace Recipes_API.Controllers
 
         private bool ToolExists(int id)
         {
-            return _context.Tools.Any(e => e.ToolId == id);
+            return _context.Tools.Any(e => e.Id == id);
         }
     }
 }

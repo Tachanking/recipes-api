@@ -9,9 +9,9 @@ namespace Recipes_API.Data
         {
             builder.ToTable("tool");
 
-            builder.Property(e => e.ToolId).HasColumnName("tool_id");
+            builder.Property(e => e.Id).HasColumnName("tool_id");
 
-            builder.Property(e => e.ToolName)
+            builder.Property(e => e.Name)
                 .IsRequired()
                 .HasColumnName("tool_name")
                 .HasMaxLength(64);

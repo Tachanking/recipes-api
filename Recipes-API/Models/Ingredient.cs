@@ -10,9 +10,9 @@ namespace Recipes_API
             RecipeIngredient = new HashSet<RecipeIngredient>();
         }
 
-        public int IngredientId { get; set; }
+        public int Id { get; set; }
         public int MeasurementId { get; set; }
-        public string IngredientName { get; set; }
+        public string Name { get; set; }
 
         public virtual Measurement Measurement { get; set; }
         public virtual ICollection<RecipeIngredient> RecipeIngredient { get; set; }

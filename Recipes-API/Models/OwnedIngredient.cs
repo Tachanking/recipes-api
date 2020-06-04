@@ -9,7 +9,7 @@ namespace Recipes_API
         {
         }
 
-        public int OwnedIngredientId { get; set; }
+        public int Id { get; set; }
         public int IngredientId { get; set; }
         public int Quantity { get; set; }
     }
