@@ -79,7 +79,7 @@ namespace Recipes_API.Controllers
             _context.Recipes.Add(recipe);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetRecipe", new { id = recipe.RecipeId }, recipe);
+            return CreatedAtAction(nameof(PostRecipe), new { id = recipe.RecipeId }, recipe);
         }
 
         // DELETE: api/Recipes/5

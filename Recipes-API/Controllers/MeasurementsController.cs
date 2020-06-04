@@ -82,7 +82,7 @@ namespace Recipes_API.Controllers
             _context.Measurements.Add(measurement);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetMeasurement", new { id = measurement.MeasurementId }, measurement);
+            return CreatedAtAction(nameof(PostMeasurement), new { id = measurement.MeasurementId }, measurement);
         }
 
         // DELETE: api/Measurements/5
