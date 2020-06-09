@@ -16,12 +16,10 @@ namespace Recipes_API
 
         public virtual DbSet<Ingredient> Ingredients { get; set; }
         public virtual DbSet<Measurement> Measurements { get; set; }
-        public virtual DbSet<OwnedIngredient> OwnedIngredients { get; set; }
         public virtual DbSet<Recipe> Recipes { get; set; }
         public virtual DbSet<RecipeIngredient> RecipeIngredients { get; set; }
         public virtual DbSet<RecipeTool> RecipeTools { get; set; }
         public virtual DbSet<Tool> Tools { get; set; }
-        public DbSet<OwnedIngredient> OwnedIngredient { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -39,7 +37,6 @@ namespace Recipes_API
 
             modelBuilder.ApplyConfiguration(new IngredientConfiguration());
             modelBuilder.ApplyConfiguration(new MeasurementConfiguration());
-            modelBuilder.ApplyConfiguration(new OwnedIngredientConfiguration());
             modelBuilder.ApplyConfiguration(new RecipeConfiguration());
             modelBuilder.ApplyConfiguration(new RecipeIngredientConfiguration());
             modelBuilder.ApplyConfiguration(new RecipeToolConfiguration());

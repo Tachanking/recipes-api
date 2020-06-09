@@ -28,7 +28,9 @@ namespace Recipes_API.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Ingredient>> GetIngredient(int id)
         {
-            var ingredient = await _context.Ingredients.FindAsync(id);
+            var ingredient = await _context.Ingredients.Where(i => i.Id == id)
+                                                        .Include(i => i.Measurement)
+                                                        .FirstOrDefaultAsync();
 
             if (ingredient == null)
             {

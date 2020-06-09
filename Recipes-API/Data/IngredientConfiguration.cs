@@ -23,8 +23,7 @@ namespace Recipes_API.Data
             builder.HasOne(d => d.Measurement)
                 .WithMany(p => p.Ingredient)
                 .HasForeignKey(d => d.MeasurementId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("ingredient_measurement_id_fkey");
+                .OnDelete(DeleteBehavior.ClientSetNull);
         }
     }
 }

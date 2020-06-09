@@ -28,7 +28,14 @@ namespace Recipes_API.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Recipe>> GetRecipe(int id)
         {
-            var recipe = await _context.Recipes.FindAsync(id);
+            //todo : load all related entities without explicitly specifying them
+            var recipe = await _context.Recipes.Where(r => r.Id == id)
+                                                .Include(r => r.RecipeIngredient)
+                                                .ThenInclude(re => re.Ingredient)
+                                                .ThenInclude(i => i.Measurement)
+                                                .Include(r => r.RecipeTool)
+                                                .ThenInclude(r => r.Tool)
+                                                .FirstOrDefaultAsync();
 
             if (recipe == null)
             {
