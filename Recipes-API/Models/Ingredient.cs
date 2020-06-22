@@ -11,11 +11,12 @@ namespace Recipes_API
         }
 
         public int Id { get; set; }
-        
+        public string Name { get; set; }
+
         public int MeasurementId { get; set; }
         public virtual Measurement Measurement { get; set; }
 
-        public string Name { get; set; }
+        // todo : delete?
         public virtual ICollection<RecipeIngredient> RecipeIngredient { get; set; }
     }
 }
