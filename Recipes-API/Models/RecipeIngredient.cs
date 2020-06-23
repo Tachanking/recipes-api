@@ -9,8 +9,8 @@ namespace Recipes_API
         public virtual Recipe Recipe { get; set; }
 
         public int IngredientId { get; set; }
-        public virtual Ingredient Ingredient { get; set; }        
+        public virtual Ingredient Ingredient { get; set; }
+
         public double Quantity { get; set; }
-        public bool IsOptional { get; set; }
     }
 }

@@ -20,10 +20,6 @@ namespace Recipes_API.Data
                 .HasColumnName("ingredient_id")
                 .ValueGeneratedOnAdd();
 
-            builder.Property(e => e.IsOptional)
-                .HasColumnName("is_optional")
-                .HasDefaultValue(false);
-
             builder.Property(e => e.Quantity).HasColumnName("quantity");
 
             builder.HasOne(d => d.Ingredient)
