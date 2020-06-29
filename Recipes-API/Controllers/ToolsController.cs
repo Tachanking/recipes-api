@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Recipes_API;
 
 namespace Recipes_API.Controllers
 {
@@ -42,8 +39,6 @@ namespace Recipes_API.Controllers
         }
 
         // PUT: api/Tools/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
         public async Task<IActionResult> PutTool(int id, Tool tool)
         {
@@ -74,8 +69,6 @@ namespace Recipes_API.Controllers
         }
 
         // POST: api/Tools
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
         public async Task<ActionResult<Tool>> PostTool(Tool tool)
         {

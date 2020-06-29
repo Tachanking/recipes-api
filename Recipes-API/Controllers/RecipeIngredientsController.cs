@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Recipes_API;
 
-namespace Recipes_API.Controllers
+namespace Recipes_API.Controllers // todo : namespace underscore?
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -35,8 +31,6 @@ namespace Recipes_API.Controllers
         }
 
         // PUT: api/RecipeIngredients/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
         public async Task<IActionResult> PutRecipeIngredient(int id, [FromBody] RecipeIngredient recipeIngredient)
         {
@@ -67,8 +61,6 @@ namespace Recipes_API.Controllers
         }
 
         // POST: api/RecipeIngredients
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
         public async Task<ActionResult<RecipeIngredient>> PostRecipeIngredient(RecipeIngredient recipeIngredient)
         {

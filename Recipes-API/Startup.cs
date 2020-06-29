@@ -1,6 +1,7 @@
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -25,7 +26,9 @@ namespace Recipes_API
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
             );
 
-            services.AddDbContext<RecipesContext>();
+            services.AddDbContext<RecipesContext>(options =>
+                options.UseNpgsql(Configuration.GetConnectionString("postgres")));
+
             services.AddMvc(options =>
             {
                 options.Filters.Add(typeof(ValidatorActionFilter));

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Recipes_API.Data;
+using Microsoft.Extensions.Configuration;
 
 namespace Recipes_API
 {
@@ -20,16 +21,6 @@ namespace Recipes_API
         public virtual DbSet<RecipeIngredient> RecipeIngredients { get; set; }
         public virtual DbSet<RecipeTool> RecipeTools { get; set; }
         public virtual DbSet<Tool> Tools { get; set; }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseNpgsql("Host=localhost;Database=postgres;Username=postgres;Password=postgres");
-            }
-        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
