@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Recipes_API;
+using Recipes_API.Dto;
 
 namespace Recipes_API.Controllers
 {
@@ -22,36 +20,35 @@ namespace Recipes_API.Controllers
 
         // GET: api/Measurements
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Measurement>>> GetMeasurements()
+        public async Task<ActionResult<IEnumerable<MeasurementDto>>> GetMeasurements()
         {
-            return await _context.Measurements.ToListAsync();
+            return await _context.Measurements.Select(m => MeasurementToDto(m)).ToListAsync();
         }
 
         // GET: api/Measurements/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Measurement>> GetMeasurement(int id)
+        public async Task<ActionResult<MeasurementDto>> GetMeasurement(int id)
         {
             var measurement = await _context.Measurements.FindAsync(id);
 
-            if (measurement == null)
+            if (measurement is null)
             {
                 return NotFound();
             }
 
-            return measurement;
+            return MeasurementToDto(measurement);
         }
 
-        // todo : DTOs?
         // PUT: api/Measurements/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutMeasurement(int id, Measurement measurement)
+        public async Task<IActionResult> PutMeasurement(int id, MeasurementDto measurementDto)
         {
-            if (id != measurement.Id)
+            if (id != measurementDto.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(measurement).State = EntityState.Modified;
+            _context.Entry(measurementDto).State = EntityState.Modified;
 
             try
             {
@@ -74,20 +71,26 @@ namespace Recipes_API.Controllers
 
         // POST: api/Measurements
         [HttpPost]
-        public async Task<ActionResult<Measurement>> PostMeasurement(Measurement measurement)
+        public async Task<ActionResult<MeasurementDto>> PostMeasurement(MeasurementDto measurementDto)
         {
+            var measurement = new Measurement
+            {
+                Name = measurementDto.Name,
+                Symbol = measurementDto.Symbol
+            };
+
             _context.Measurements.Add(measurement);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(PostMeasurement), new { id = measurement.Id }, measurement);
+            return CreatedAtAction(nameof(PostMeasurement), measurementDto);
         }
 
         // DELETE: api/Measurements/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Measurement>> DeleteMeasurement(int id)
+        public async Task<ActionResult<MeasurementDto>> DeleteMeasurement(int id)
         {
             var measurement = await _context.Measurements.FindAsync(id);
-            if (measurement == null)
+            if (measurement is null)
             {
                 return NotFound();
             }
@@ -95,12 +98,22 @@ namespace Recipes_API.Controllers
             _context.Measurements.Remove(measurement);
             await _context.SaveChangesAsync();
 
-            return measurement;
+            return MeasurementToDto(measurement);
         }
 
         private bool MeasurementExists(int id)
         {
             return _context.Measurements.Any(e => e.Id == id);
+        }
+
+        private static MeasurementDto MeasurementToDto(Measurement measurement)
+        {
+            return new MeasurementDto
+            {
+                Id = measurement.Id,
+                Name = measurement.Name,
+                Symbol = measurement.Symbol
+            };
         }
     }
 }

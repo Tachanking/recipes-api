@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Recipes_API.Dto;
 
 namespace Recipes_API.Controllers
 {
@@ -19,35 +20,35 @@ namespace Recipes_API.Controllers
 
         // GET: api/Tools
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Tool>>> GetTools()
+        public async Task<ActionResult<IEnumerable<ToolDto>>> GetTools()
         {
-            return await _context.Tools.ToListAsync();
+            return await _context.Tools.Select(t => ToolToDto(t)).ToListAsync();
         }
 
         // GET: api/Tools/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Tool>> GetTool(int id)
+        public async Task<ActionResult<ToolDto>> GetTool(long id)
         {
             var tool = await _context.Tools.FindAsync(id);
 
-            if (tool == null)
+            if (tool is null)
             {
                 return NotFound();
             }
 
-            return tool;
+            return ToolToDto(tool);
         }
 
         // PUT: api/Tools/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutTool(int id, Tool tool)
+        public async Task<IActionResult> PutTool(long id, ToolDto toolDto)
         {
-            if (id != tool.Id)
+            if (id != toolDto.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(tool).State = EntityState.Modified;
+            _context.Entry(toolDto).State = EntityState.Modified;
 
             try
             {
@@ -70,20 +71,26 @@ namespace Recipes_API.Controllers
 
         // POST: api/Tools
         [HttpPost]
-        public async Task<ActionResult<Tool>> PostTool(Tool tool)
+        public async Task<ActionResult<Tool>> PostTool(ToolDto toolDto)
         {
+            var tool = new Tool 
+            {
+                Id = toolDto.Id,
+                Name = toolDto.Name
+            };
+
             _context.Tools.Add(tool);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(PostTool), new { id = tool.Id }, tool);
+            return CreatedAtAction(nameof(PostTool), toolDto);
         }
 
         // DELETE: api/Tools/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Tool>> DeleteTool(int id)
+        public async Task<ActionResult<Tool>> DeleteTool(long id)
         {
             var tool = await _context.Tools.FindAsync(id);
-            if (tool == null)
+            if (tool is null)
             {
                 return NotFound();
             }
@@ -94,9 +101,18 @@ namespace Recipes_API.Controllers
             return tool;
         }
 
-        private bool ToolExists(int id)
+        private bool ToolExists(long id)
         {
-            return _context.Tools.Any(e => e.Id == id);
+            return _context.Tools.Any(t => t.Id == id);
+        }
+
+        private static ToolDto ToolToDto(Tool tool)
+        {
+            return new ToolDto
+            {
+                Id = tool.Id,
+                Name = tool.Name,
+            };
         }
     }
 }
