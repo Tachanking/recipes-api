@@ -20,22 +20,24 @@ namespace Recipes_API.Controllers
 
         // GET: api/RecipeIngredients
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Dto.RecipeIngredientDto>>> GetRecipeIngredients(long recipeId)
+        public async Task<ActionResult<IEnumerable<RecipeIngredientDto>>> GetRecipeIngredients(long recipeId)
         {
             return await _context.RecipeIngredients.Where(ri => ri.RecipeId == recipeId)
                                                     .Include(ri => ri.Recipe)
                                                     .Include(ri => ri.Ingredient)
+                                                        .ThenInclude(i => i.Measurement)
                                                     .Select(ri => RecipeIngredientToDto(ri))
                                                     .ToListAsync();
         }
 
-        // GET: api/Recipes/5/Ingredients/4 // todo
+        // GET: api/Recipes/5/Ingredients/4 // todo route + response format
         [HttpGet("{id}")]
-        public async Task<ActionResult<Dto.RecipeIngredientDto>> GetRecipeIngredient(long recipeId, long ingredientId)  
+        public async Task<ActionResult<RecipeIngredientDto>> GetRecipeIngredient(long recipeId, long ingredientId)  
         {
             var recipeIngredient = await _context.RecipeIngredients.Where(ri => recipeId == ri.Recipe.Id && ingredientId == ri.IngredientId)
                                                     .Include(ri => ri.Recipe)
                                                     .Include(ri => ri.Ingredient)
+                                                        .ThenInclude(i => i.Measurement)
                                                     .FirstOrDefaultAsync();
 
             if (recipeIngredient is null)
@@ -78,7 +80,7 @@ namespace Recipes_API.Controllers
 
         // POST: api/RecipeIngredients
         [HttpPost]
-        public async Task<ActionResult<Dto.RecipeIngredientDto>> PostRecipeIngredient(Dto.RecipeIngredientDto recipeIngredientDto)
+        public async Task<ActionResult<RecipeIngredientDto>> PostRecipeIngredient(RecipeIngredientDto recipeIngredientDto)
         {
             var recipeIngredient = new RecipeIngredient
             {
