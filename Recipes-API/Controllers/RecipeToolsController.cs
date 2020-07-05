@@ -4,11 +4,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Recipes_API.Dto;
-using Recipes_API.Migrations;
 
 namespace Recipes_API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/Recipes/{recipeId}/Tools")]
     [ApiController]
     public class RecipeToolsController : ControllerBase
     {
@@ -19,17 +18,19 @@ namespace Recipes_API.Controllers
             _context = context;
         }
 
-        // GET: api/RecipeTools
+        // GET: api/Recipes/5/Tools
         [HttpGet]
         public async Task<ActionResult<IEnumerable<RecipeToolDto>>> GetRecipeTools(long recipeId)
         {
             return await _context.RecipeTools.Where(rt => rt.Recipe.Id == recipeId)
+                                                .Include(rt => rt.Recipe)
+                                                .Include(rt => rt.Tool)
                                                 .Select(rt => RecipeToolToDto(rt))
                                                 .ToListAsync();
         }
 
-        // GET: api/RecipeTools/5/Tools/4 // todo
-        [HttpGet("{id}")]
+        // GET: api/Recipes/5/Tools/4
+        [HttpGet("{toolId}")]
         public async Task<ActionResult<RecipeToolDto>> GetRecipeTool(long recipeId, long toolId)
         {
             var recipeTool = await _context.RecipeTools.Where(rt => rt.Recipe.Id == recipeId && rt.Tool.Id == toolId)
@@ -45,8 +46,8 @@ namespace Recipes_API.Controllers
             return RecipeToolToDto(recipeTool);
         }
 
-        // PUT: api/Recipes/5/Tools/4 // todo
-        [HttpPut("{id}")]
+        // PUT: api/Recipes/5/Tools/4
+        [HttpPut("{toolId}")]
         public async Task<IActionResult> PutRecipeTool(long recipeId, long toolId, RecipeToolDto recipeToolDto)
         {
             if (recipeId != recipeToolDto.Recipe.Id || toolId != recipeToolDto.Tool.Id)
@@ -75,15 +76,21 @@ namespace Recipes_API.Controllers
             return NoContent();
         }
 
-        // POST: api/RecipeTools
+        // POST: api/Recipes/5/Tools
         [HttpPost]
-        public async Task<ActionResult<RecipeToolDto>> PostRecipeTool(RecipeToolDto recipeToolDto)
+        public async Task<ActionResult<RecipeToolDto>> PostRecipeTool(long recipeId, RecipeToolDto recipeToolDto)
         {
+            if (recipeId != recipeToolDto.Recipe.Id)
+            {
+                return BadRequest();
+            }
+
             var recipeTool = new RecipeTool
             {
+                RecipeId = recipeId,
                 Recipe = new Recipe
                 {
-                    Id = recipeToolDto.Recipe.Id,
+                    Id = recipeId,
                     Name = recipeToolDto.Recipe.Name
                 },
                 Tool = new Tool
@@ -100,8 +107,8 @@ namespace Recipes_API.Controllers
             return CreatedAtAction("GetRecipeTool", recipeToolDto);
         }
 
-        // DELETE: api/RecipeTools/5
-        [HttpDelete("{id}")]
+        // DELETE: api/Recipes/5/Tools/5
+        [HttpDelete("{toolId}")]
         public async Task<ActionResult<RecipeToolDto>> DeleteRecipeTool(long recipeId, long toolId)
         {
             var recipeTool = await _context.RecipeTools.FindAsync(recipeId, toolId);

@@ -7,7 +7,7 @@ using Recipes_API.Dto;
 
 namespace Recipes_API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/Recipes/{recipeId}/Ingredients")]
     [ApiController]
     public class RecipeIngredientsController : ControllerBase
     {
@@ -18,7 +18,7 @@ namespace Recipes_API.Controllers
             _context = context;
         }
 
-        // GET: api/RecipeIngredients
+        // GET: api/Recipes/6/Ingredients
         [HttpGet]
         public async Task<ActionResult<IEnumerable<RecipeIngredientDto>>> GetRecipeIngredients(long recipeId)
         {
@@ -30,12 +30,12 @@ namespace Recipes_API.Controllers
                                                     .ToListAsync();
         }
 
-        // GET: api/Recipes/5/Ingredients/4 // todo route + response format
-        [HttpGet("{id}")]
+        // GET: api/Recipes/5/Ingredients/4
+        [HttpGet("{ingredientId}")]
         public async Task<ActionResult<RecipeIngredientDto>> GetRecipeIngredient(long recipeId, long ingredientId)  
         {
             var recipeIngredient = await _context.RecipeIngredients.Where(ri => recipeId == ri.Recipe.Id && ingredientId == ri.IngredientId)
-                                                    .Include(ri => ri.Recipe)
+                                                    .Include(ri => ri.Recipe) // todo : recipe model without collections?
                                                     .Include(ri => ri.Ingredient)
                                                         .ThenInclude(i => i.Measurement)
                                                     .FirstOrDefaultAsync();
@@ -48,8 +48,8 @@ namespace Recipes_API.Controllers
             return RecipeIngredientToDto(recipeIngredient);
         }
 
-        // PUT: api/Recipe/5/Ingredients/4 // todo
-        [HttpPut("{id}")]
+        // PUT: api/Recipes/5/Ingredients/4
+        [HttpPut("{ingredientId}")]
         public async Task<IActionResult> PutRecipeIngredient(long recipeId, long ingredientId, [FromBody] RecipeIngredientDto recipeIngredientDto)
         {
             if (recipeId != recipeIngredientDto.Recipe.Id || ingredientId != recipeIngredientDto.Ingredient.Id)
@@ -78,16 +78,21 @@ namespace Recipes_API.Controllers
             return NoContent();
         }
 
-        // POST: api/RecipeIngredients
+        // POST: api/Recipes/5/Ingredients
         [HttpPost]
-        public async Task<ActionResult<RecipeIngredientDto>> PostRecipeIngredient(RecipeIngredientDto recipeIngredientDto)
+        public async Task<ActionResult<RecipeIngredientDto>> PostRecipeIngredient(long recipeId, RecipeIngredientDto recipeIngredientDto)
         {
+            if (recipeId != recipeIngredientDto.Recipe.Id)
+            {
+                return BadRequest();
+            }
+
             var recipeIngredient = new RecipeIngredient
             {
-                RecipeId = recipeIngredientDto.Recipe.Id,
+                RecipeId = recipeId,
                 Recipe = new Recipe
                 {
-                    Id = recipeIngredientDto.Recipe.Id,
+                    Id = recipeId,
                     Name = recipeIngredientDto.Recipe.Name
                 },
                 IngredientId = recipeIngredientDto.Ingredient.Id,
@@ -110,8 +115,8 @@ namespace Recipes_API.Controllers
             return CreatedAtAction("GetRecipeIngredient", recipeIngredientDto);
         }
 
-        // DELETE: api/RecipeIngredients/5
-        [HttpDelete("{id}")]
+        // DELETE: api/Recipes/5/Ingredients/5
+        [HttpDelete("{ingredientId}")]
         public async Task<ActionResult<RecipeIngredientDto>> DeleteRecipeIngredient(long recipeId, long ingredientId)
         {
             var recipeIngredient = await _context.RecipeIngredients.FindAsync(recipeId, ingredientId);
