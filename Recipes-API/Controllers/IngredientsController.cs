@@ -22,8 +22,7 @@ namespace Recipes_API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<IngredientDto>>> GetIngredients()
         { 
-            return await _context.Ingredients.Include(i => i.Measurement)
-                                                .Select(i => IngredientToDto(i))
+            return await _context.Ingredients.Select(i => IngredientToDto(i))
                                                 .ToListAsync();
         }
 
@@ -32,7 +31,6 @@ namespace Recipes_API.Controllers
         public async Task<ActionResult<IngredientDto>> GetIngredient(int id)
         {
             var ingredient = await _context.Ingredients.Where(i => i.Id == id)
-                                                        .Include(i => i.Measurement)
                                                         .FirstOrDefaultAsync();
 
             if (ingredient is null)
@@ -79,13 +77,7 @@ namespace Recipes_API.Controllers
         {
             var ingredient = new Ingredient
             {
-                Name = ingredientDto.Name,
-                Measurement = new Measurement
-                {
-                    Id = ingredientDto.Measurement.Id,
-                    Name = ingredientDto.Measurement.Name,
-                    Symbol = ingredientDto.Measurement.Symbol
-                }
+                Name = ingredientDto.Name
             };
 
             _context.Ingredients.Add(ingredient);
@@ -120,13 +112,7 @@ namespace Recipes_API.Controllers
             return new IngredientDto
             {
                 Id = ingredient.Id,
-                Name = ingredient.Name,
-                Measurement = new MeasurementDto
-                {
-                    Id = ingredient.Measurement.Id,
-                    Name = ingredient.Measurement.Name,
-                    Symbol = ingredient.Measurement.Symbol
-                }
+                Name = ingredient.Name
             };
         }
     }

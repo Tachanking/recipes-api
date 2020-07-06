@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Recipes_API.Data;
-using Microsoft.Extensions.Configuration;
+using Recipes_API.Models;
 
 namespace Recipes_API
 {
@@ -18,7 +18,7 @@ namespace Recipes_API
         public virtual DbSet<Ingredient> Ingredients { get; set; }
         public virtual DbSet<Measurement> Measurements { get; set; }
         public virtual DbSet<Recipe> Recipes { get; set; }
-        public virtual DbSet<RecipeIngredient> RecipeIngredients { get; set; }
+        public virtual DbSet<RecipeIngredientMeasurement> RecipeIngredientMeasurements { get; set; }
         public virtual DbSet<RecipeTool> RecipeTools { get; set; }
         public virtual DbSet<Tool> Tools { get; set; }
 
@@ -27,9 +27,9 @@ namespace Recipes_API
             modelBuilder.HasPostgresExtension("adminpack");
 
             modelBuilder.ApplyConfiguration(new IngredientConfiguration());
+            modelBuilder.ApplyConfiguration(new RecipeIngredientMeasurementConfiguration());
             modelBuilder.ApplyConfiguration(new MeasurementConfiguration());
             modelBuilder.ApplyConfiguration(new RecipeConfiguration());
-            modelBuilder.ApplyConfiguration(new RecipeIngredientConfiguration());
             modelBuilder.ApplyConfiguration(new RecipeToolConfiguration());
             modelBuilder.ApplyConfiguration(new ToolConfiguration());
 
@@ -37,5 +37,7 @@ namespace Recipes_API
         }
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+
+        public DbSet<Recipes_API.Models.RecipeIngredientMeasurement> RecipeIngredientMeasurement { get; set; }
     }
 }

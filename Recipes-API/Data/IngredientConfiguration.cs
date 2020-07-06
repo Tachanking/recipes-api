@@ -15,15 +15,6 @@ namespace Recipes_API.Data
                 .IsRequired()
                 .HasColumnName("ingredient_name")
                 .HasMaxLength(64);
-
-            builder.Property(e => e.MeasurementId)
-                .HasColumnName("measurement_id")
-                .ValueGeneratedOnAdd();
-
-            builder.HasOne(d => d.Measurement)
-                .WithMany(p => p.Ingredient)
-                .HasForeignKey(d => d.MeasurementId)
-                .OnDelete(DeleteBehavior.ClientSetNull);
         }
     }
 }

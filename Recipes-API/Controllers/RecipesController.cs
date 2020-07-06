@@ -22,9 +22,8 @@ namespace Recipes_API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<RecipeDto>>> GetRecipes()
         {
-            return await _context.Recipes.Include(r => r.RecipeIngredient)
+            return await _context.Recipes.Include(r => r.RecipeIngredientMeasurement)
                                             .ThenInclude(re => re.Ingredient)
-                                            .ThenInclude(i => i.Measurement)
                                             .Include(r => r.RecipeTool)
                                             .ThenInclude(r => r.Tool)
                                             .Select(r => RecipeToDto(r))
@@ -36,9 +35,8 @@ namespace Recipes_API.Controllers
         public async Task<ActionResult<RecipeDto>> GetRecipe(int id)
         {
             var recipe = await _context.Recipes.Where(r => r.Id == id)
-                                                .Include(r => r.RecipeIngredient)
+                                                .Include(r => r.RecipeIngredientMeasurement)
                                                 .ThenInclude(re => re.Ingredient)
-                                                .ThenInclude(i => i.Measurement)
                                                 .Include(r => r.RecipeTool)
                                                 .ThenInclude(r => r.Tool)
                                                 .FirstOrDefaultAsync();

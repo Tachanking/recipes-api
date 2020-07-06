@@ -6,10 +6,10 @@ namespace Recipes_API.Validators
     {
         public IngredientValidator()
         {
-            RuleFor(ingredient => ingredient.Name).NotNull().MaximumLength(64);
-            RuleFor(ingredient => ingredient.MeasurementId).NotNull();
+            //RuleFor(ingredient => ingredient.Name).NotNull().MaximumLength(64);
+            //RuleFor(ingredient => ingredient.MeasurementId).NotNull();
 
-            RuleForEach(recipeIngredient => recipeIngredient.RecipeIngredient).SetValidator(new RecipeIngredientValidator());
+            //RuleForEach(recipeIngredient => recipeIngredient.RecipeIngredient).SetValidator(new RecipeIngredientValidator());
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Recipes_API.Models;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Recipes_API
@@ -7,16 +8,13 @@ namespace Recipes_API
     {
         public Ingredient()
         {
-            RecipeIngredient = new HashSet<RecipeIngredient>();
+            RecipeIngredientMeasurement = new HashSet<RecipeIngredientMeasurement>();
         }
 
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long Id { get; set; }
         public string Name { get; set; }
 
-        public long MeasurementId { get; set; }
-        public virtual Measurement Measurement { get; set; }
-
-        public virtual ICollection<RecipeIngredient> RecipeIngredient { get; set; }
+        public virtual ICollection<RecipeIngredientMeasurement> RecipeIngredientMeasurement { get; set; }
     }
 }
