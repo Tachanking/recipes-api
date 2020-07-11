@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Recipes_API.Dto;
@@ -12,17 +13,19 @@ namespace Recipes_API.Controllers
     public class MeasurementsController : ControllerBase
     {
         private readonly RecipesContext _context;
+        private readonly IMapper _mapper;
 
-        public MeasurementsController(RecipesContext context)
+        public MeasurementsController(RecipesContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         // GET: api/Measurements
         [HttpGet]
         public async Task<ActionResult<IEnumerable<MeasurementDto>>> GetMeasurements()
         {
-            return await _context.Measurements.Select(m => MeasurementToDto(m)).ToListAsync();
+            return await _context.Measurements.Select(m => _mapper.Map<MeasurementDto>(m)).ToListAsync();
         }
 
         // GET: api/Measurements/5
@@ -36,18 +39,13 @@ namespace Recipes_API.Controllers
                 return NotFound();
             }
 
-            return MeasurementToDto(measurement);
+            return _mapper.Map<MeasurementDto>(measurement);
         }
 
         // PUT: api/Measurements/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutMeasurement(int id, MeasurementDto measurementDto)
         {
-            if (id != measurementDto.Id)
-            {
-                return BadRequest();
-            }
-
             _context.Entry(measurementDto).State = EntityState.Modified;
 
             try
@@ -73,11 +71,7 @@ namespace Recipes_API.Controllers
         [HttpPost]
         public async Task<ActionResult<MeasurementDto>> PostMeasurement(MeasurementDto measurementDto)
         {
-            var measurement = new Measurement
-            {
-                Name = measurementDto.Name,
-                Symbol = measurementDto.Symbol
-            };
+            var measurement = _mapper.Map<Measurement>(measurementDto);
 
             _context.Measurements.Add(measurement);
             await _context.SaveChangesAsync();
@@ -98,22 +92,12 @@ namespace Recipes_API.Controllers
             _context.Measurements.Remove(measurement);
             await _context.SaveChangesAsync();
 
-            return MeasurementToDto(measurement);
+            return _mapper.Map<MeasurementDto>(measurement);
         }
 
         private bool MeasurementExists(int id)
         {
             return _context.Measurements.Any(e => e.Id == id);
-        }
-
-        private static MeasurementDto MeasurementToDto(Measurement measurement)
-        {
-            return new MeasurementDto
-            {
-                Id = measurement.Id,
-                Name = measurement.Name,
-                Symbol = measurement.Symbol
-            };
         }
     }
 }

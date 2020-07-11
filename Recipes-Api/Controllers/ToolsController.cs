@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Recipes_API.Dto;
@@ -12,17 +13,19 @@ namespace Recipes_API.Controllers
     public class ToolsController : ControllerBase
     {
         private readonly RecipesContext _context;
+        private readonly IMapper _mapper;
 
-        public ToolsController(RecipesContext context)
+        public ToolsController(RecipesContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         // GET: api/Tools
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ToolDto>>> GetTools()
         {
-            return await _context.Tools.Select(t => ToolToDto(t)).ToListAsync();
+            return await _context.Tools.Select(t => _mapper.Map<Tool, ToolDto>(t)).ToListAsync();
         }
 
         // GET: api/Tools/5
@@ -36,18 +39,13 @@ namespace Recipes_API.Controllers
                 return NotFound();
             }
 
-            return ToolToDto(tool);
+            return _mapper.Map<ToolDto>(tool);
         }
 
         // PUT: api/Tools/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutTool(long id, ToolDto toolDto)
         {
-            if (id != toolDto.Id)
-            {
-                return BadRequest();
-            }
-
             _context.Entry(toolDto).State = EntityState.Modified;
 
             try
@@ -73,11 +71,7 @@ namespace Recipes_API.Controllers
         [HttpPost]
         public async Task<ActionResult<Tool>> PostTool(ToolDto toolDto)
         {
-            var tool = new Tool 
-            {
-                Id = toolDto.Id,
-                Name = toolDto.Name
-            };
+            var tool = _mapper.Map<Tool>(toolDto);
 
             _context.Tools.Add(tool);
             await _context.SaveChangesAsync();
@@ -104,15 +98,6 @@ namespace Recipes_API.Controllers
         private bool ToolExists(long id)
         {
             return _context.Tools.Any(t => t.Id == id);
-        }
-
-        private static ToolDto ToolToDto(Tool tool)
-        {
-            return new ToolDto
-            {
-                Id = tool.Id,
-                Name = tool.Name,
-            };
         }
     }
 }

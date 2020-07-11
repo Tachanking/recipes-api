@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Recipes_API.Dto;
@@ -12,52 +13,39 @@ namespace Recipes_API.Controllers
     public class RecipesController : ControllerBase
     {
         private readonly RecipesContext _context;
+        private readonly IMapper _mapper;
 
-        public RecipesController(RecipesContext context)
+        public RecipesController(RecipesContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         // GET: api/Recipes
         [HttpGet]
         public async Task<ActionResult<IEnumerable<RecipeDto>>> GetRecipes()
         {
-            return await _context.Recipes.Include(r => r.RecipeIngredientMeasurement)
-                                            .ThenInclude(re => re.Ingredient)
-                                            .Include(r => r.RecipeTool)
-                                            .ThenInclude(r => r.Tool)
-                                            .Select(r => RecipeToDto(r))
-                                            .ToListAsync();
+            return await _context.Recipes.Select(r => _mapper.Map<RecipeDto>(r)).ToListAsync();
         }
 
         // GET: api/Recipes/5
         [HttpGet("{id}")]
         public async Task<ActionResult<RecipeDto>> GetRecipe(int id)
         {
-            var recipe = await _context.Recipes.Where(r => r.Id == id)
-                                                .Include(r => r.RecipeIngredientMeasurement)
-                                                .ThenInclude(re => re.Ingredient)
-                                                .Include(r => r.RecipeTool)
-                                                .ThenInclude(r => r.Tool)
-                                                .FirstOrDefaultAsync();
+            var recipe = await _context.Recipes.Where(r => r.Id == id).FirstOrDefaultAsync();
 
             if (recipe is null)
             {
                 return NotFound();
             }
 
-            return RecipeToDto(recipe);
+            return _mapper.Map<RecipeDto>(recipe);
         }
 
         // PUT: api/Recipes/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutRecipe(int id, RecipeDto recipeDto)
         {
-            if (id != recipeDto.Id)
-            {
-                return BadRequest();
-            }
-
             _context.Entry(recipeDto).State = EntityState.Modified;
 
             try
@@ -83,11 +71,7 @@ namespace Recipes_API.Controllers
         [HttpPost]
         public async Task<ActionResult<RecipeDto>> PostRecipe(RecipeDto recipeDto)
         {
-            var recipe = new Recipe
-            {
-                Id = recipeDto.Id,
-                Name = recipeDto.Name
-            };
+            var recipe = _mapper.Map<Recipe>(recipeDto);
 
             _context.Recipes.Add(recipe);
             await _context.SaveChangesAsync();
@@ -108,26 +92,12 @@ namespace Recipes_API.Controllers
             _context.Recipes.Remove(recipe);
             await _context.SaveChangesAsync();
 
-            return RecipeToDto(recipe);
+            return _mapper.Map<RecipeDto>(recipe);
         }
 
         private bool RecipeExists(int id)
         {
             return _context.Recipes.Any(r => r.Id == id);
-        }
-
-        private static RecipeDto RecipeToDto(Recipe recipe)
-        {
-            return new RecipeDto
-            {
-                Id = recipe.Id,
-                Name = recipe.Name,
-                //RecipeIngredientMeasurements = new List<RecipeIngredientMeasurementDto>{
-                //    recipe.RecipeIngredientMeasurement.Select(e => e.ToDto())
-                //},
-                ////recipe.RecipeIngredientMeasurement,
-                //RecipeTools = recipe.RecipeTool
-            };
         }
     }
 }

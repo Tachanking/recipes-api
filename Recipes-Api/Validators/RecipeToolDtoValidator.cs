@@ -8,8 +8,8 @@ namespace Recipes_API.Validators
     {
         public RecipeToolDtoValidator()
         {
-            RuleFor(tool => tool.ToolName).NotEmpty();
-            RuleFor(tool => tool.ToolName).MaximumLength(Constants.NameMaxLength);
+            //RuleFor(tool => tool.ToolName).NotEmpty();
+            //RuleFor(tool => tool.ToolName).MaximumLength(Constants.NameMaxLength);
         }
     }
 }

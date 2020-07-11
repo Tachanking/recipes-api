@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Recipes_API.Dto;
@@ -12,17 +13,19 @@ namespace Recipes_API.Controllers
     public class IngredientsController : ControllerBase
     {
         private readonly RecipesContext _context;
+        private readonly IMapper _mapper;
 
-        public IngredientsController(RecipesContext context)
+        public IngredientsController(RecipesContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         // GET: api/Ingredients
         [HttpGet]
         public async Task<ActionResult<IEnumerable<IngredientDto>>> GetIngredients()
         { 
-            return await _context.Ingredients.Select(i => IngredientToDto(i))
+            return await _context.Ingredients.Select(i => _mapper.Map<IngredientDto>(i))
                                                 .ToListAsync();
         }
 
@@ -38,18 +41,13 @@ namespace Recipes_API.Controllers
                 return NotFound();
             }
 
-            return IngredientToDto(ingredient);
+            return _mapper.Map<IngredientDto>(ingredient);
         }
 
         // PUT: api/Ingredients/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutIngredient(long id, IngredientDto ingredientDto)
         {
-            if (id != ingredientDto.Id)
-            {
-                return BadRequest();
-            }
-
             _context.Entry(ingredientDto).State = EntityState.Modified;
 
             try
@@ -75,10 +73,7 @@ namespace Recipes_API.Controllers
         [HttpPost]
         public async Task<ActionResult<IngredientDto>> PostIngredient(IngredientDto ingredientDto)
         {
-            var ingredient = new Ingredient
-            {
-                Name = ingredientDto.Name
-            };
+            var ingredient = _mapper.Map<Ingredient>(ingredientDto);
 
             _context.Ingredients.Add(ingredient);
             await _context.SaveChangesAsync();
@@ -99,21 +94,12 @@ namespace Recipes_API.Controllers
             _context.Ingredients.Remove(ingredient);
             await _context.SaveChangesAsync();
 
-            return IngredientToDto(ingredient);
+            return _mapper.Map<IngredientDto>(ingredient);
         }
 
         private bool IngredientExists(long id)
         {
             return _context.Ingredients.Any(i => i.Id == id);
-        }
-
-        private static IngredientDto IngredientToDto(Ingredient ingredient)
-        {
-            return new IngredientDto
-            {
-                Id = ingredient.Id,
-                Name = ingredient.Name
-            };
         }
     }
 }

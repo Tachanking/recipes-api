@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Recipes_API.Dto;
@@ -12,10 +13,12 @@ namespace Recipes_API.Controllers
     public class RecipeToolsController : ControllerBase
     {
         private readonly RecipesContext _context;
+        private readonly IMapper _mapper;
 
-        public RecipeToolsController(RecipesContext context)
+        public RecipeToolsController(RecipesContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         // GET: api/Recipes/5/Tools
@@ -23,9 +26,7 @@ namespace Recipes_API.Controllers
         public async Task<ActionResult<IEnumerable<RecipeToolDto>>> GetRecipeTools(long recipeId)
         {
             return await _context.RecipeTools.Where(rt => rt.Recipe.Id == recipeId)
-                                                .Include(rt => rt.Recipe)
-                                                .Include(rt => rt.Tool)
-                                                .Select(rt => RecipeToolToDto(rt))
+                                                .Select(rt => _mapper.Map<RecipeToolDto>(rt))
                                                 .ToListAsync();
         }
 
@@ -33,28 +34,20 @@ namespace Recipes_API.Controllers
         [HttpGet("{toolId}")]
         public async Task<ActionResult<RecipeToolDto>> GetRecipeTool(long recipeId, long toolId)
         {
-            var recipeTool = await _context.RecipeTools.Where(rt => rt.Recipe.Id == recipeId && rt.Tool.Id == toolId)
-                                                        .Include(rt => rt.Recipe)
-                                                        .Include(rt => rt.Tool)
-                                                        .FirstOrDefaultAsync();
+            var recipeTool = await _context.RecipeTools.Where(rt => rt.Recipe.Id == recipeId && rt.Tool.Id == toolId).FirstOrDefaultAsync();
 
             if (recipeTool is null)
             {
                 return NotFound();
             }
 
-            return RecipeToolToDto(recipeTool);
+            return _mapper.Map<RecipeToolDto>(recipeTool);
         }
 
         // PUT: api/Recipes/5/Tools/4
         [HttpPut("{toolId}")]
         public async Task<IActionResult> PutRecipeTool(long recipeId, long toolId, RecipeToolDto recipeToolDto)
         {
-            // todo : automapper integration 
-            //              flatten DTOs
-            //              voir tuto pour la suite
-            //        Dto validations
-
             _context.Entry(recipeToolDto).State = EntityState.Modified;
 
             try
@@ -78,23 +71,9 @@ namespace Recipes_API.Controllers
 
         // POST: api/Recipes/5/Tools
         [HttpPost]
-        public async Task<ActionResult<RecipeToolDto>> PostRecipeTool(long recipeId, long toolId, RecipeToolDto recipeToolDto)
+        public async Task<ActionResult<RecipeToolDto>> PostRecipeTool(RecipeToolDto recipeToolDto)
         {
-            var recipeTool = new RecipeTool
-            {
-                RecipeId = recipeId,
-                Recipe = new Recipe
-                {
-                    Id = recipeId,
-                    Name = recipeToolDto.RecipeName
-                },
-                Tool = new Tool
-                {
-                    Id = toolId,
-                    Name = recipeToolDto.ToolName
-                },
-                Quantity = recipeToolDto.Quantity
-            };
+            var recipeTool = _mapper.Map<RecipeTool>(recipeToolDto);
 
             _context.RecipeTools.Add(recipeTool);
             await _context.SaveChangesAsync();
@@ -115,22 +94,12 @@ namespace Recipes_API.Controllers
             _context.RecipeTools.Remove(recipeTool);
             await _context.SaveChangesAsync();
 
-            return RecipeToolToDto(recipeTool);
+            return _mapper.Map<RecipeToolDto>(recipeTool);
         }
 
         private bool RecipeToolExists(long recipeId, long toolId)
         {
             return _context.RecipeTools.Any(rt => rt.RecipeId == recipeId && rt.ToolId == toolId);
-        }
-
-        private static RecipeToolDto RecipeToolToDto(RecipeTool recipeTool)
-        {
-            return new RecipeToolDto
-            {
-                RecipeName = recipeTool.Recipe.Name,
-                ToolName = recipeTool.Tool.Name,
-                Quantity = recipeTool.Quantity
-            };
         }
     }
 }

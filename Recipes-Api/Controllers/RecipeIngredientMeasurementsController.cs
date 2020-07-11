@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Recipes_API.Dto;
@@ -13,10 +14,13 @@ namespace Recipes_API.Controllers
     public class RecipeIngredientMeasurementsController : ControllerBase
     {
         private readonly RecipesContext _context;
+        private readonly IMapper _mapper;
 
-        public RecipeIngredientMeasurementsController(RecipesContext context)
+        public RecipeIngredientMeasurementsController(RecipesContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
+
         }
 
         // GET: api/Recipes/5/Ingredients/5/Measurements
@@ -24,7 +28,7 @@ namespace Recipes_API.Controllers
         public async Task<ActionResult<IEnumerable<RecipeIngredientMeasurementDto>>> GetRecipeIngredientMeasurements(long recipeId, long ingredientId)
         {
             return await _context.RecipeIngredientMeasurement.Where(r => r.RecipeId == recipeId && r.IngredientId == ingredientId)
-                                                                .Select(r => RecipeIngredientMeasurementToDto(r))
+                                                                .Select(r => _mapper.Map<RecipeIngredientMeasurementDto>(r))
                                                                 .ToListAsync();
 
             // todo : NotFound(); ???
@@ -44,20 +48,13 @@ namespace Recipes_API.Controllers
                 return NotFound();
             }
 
-            return RecipeIngredientMeasurementToDto(recipeIngredientMeasurement);
+            return _mapper.Map<RecipeIngredientMeasurementDto>(recipeIngredientMeasurement);
         }
 
         // PUT: api/Recipes/5/Ingredients/5/Measurements
         [HttpPut("{measurementId}")]
         public async Task<IActionResult> PutRecipeIngredientMeasurement(long recipeId, long ingredientId, long measurementId, RecipeIngredientMeasurementDto recipeIngredientMeasuermentDto)
         {
-            if (recipeId != recipeIngredientMeasuermentDto.RecipeId || 
-                ingredientId != recipeIngredientMeasuermentDto.IngredientId || 
-                measurementId != recipeIngredientMeasuermentDto.MeasurementId)
-            {
-                return BadRequest();
-            }
-
             _context.Entry(recipeIngredientMeasuermentDto).State = EntityState.Modified;
 
             try
@@ -81,29 +78,16 @@ namespace Recipes_API.Controllers
 
         // POST: api/Recipes/5/Ingredients/5/Measurements
         [HttpPost]
-        public async Task<ActionResult<RecipeIngredientMeasurementDto>> PostRecipeIngredientMeasurement(long recipeId, long ingredientId, RecipeIngredientMeasurementDto recipeIngredientMeasuermentDto)
+        public async Task<ActionResult<RecipeIngredientMeasurementDto>> PostRecipeIngredientMeasurement(RecipeIngredientMeasurementDto recipeIngredientMeasuermentDto)
         {
-            if (recipeId != recipeIngredientMeasuermentDto.RecipeId ||
-                ingredientId != recipeIngredientMeasuermentDto.IngredientId)
-            {
-                return BadRequest();
-            }
-
-            var recipeIngredientMeasurement = new RecipeIngredientMeasurement
-            {
-                RecipeId = recipeIngredientMeasuermentDto.RecipeId,
-                IngredientId = recipeIngredientMeasuermentDto.IngredientId,
-                MeasurementId = recipeIngredientMeasuermentDto.MeasurementId,
-
-                Quantity = recipeIngredientMeasuermentDto.Quantity
-            };
+            var recipeIngredientMeasurement = _mapper.Map<RecipeIngredientMeasurement>(recipeIngredientMeasuermentDto);
 
             _context.RecipeIngredientMeasurement.Add(recipeIngredientMeasurement);
 
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetRecipeIngredientMeasurement", new { 
-                                                                            recipeId = recipeIngredientMeasuermentDto.IngredientId, 
+                                                                            recipeId = recipeIngredientMeasuermentDto.RecipeId,
                                                                             ingredientId = recipeIngredientMeasuermentDto.IngredientId,
                                                                             measurementId = recipeIngredientMeasuermentDto.MeasurementId 
                                                                         }, recipeIngredientMeasuermentDto);
@@ -125,24 +109,12 @@ namespace Recipes_API.Controllers
             _context.RecipeIngredientMeasurement.Remove(recipeIngredientMeasurement);
             await _context.SaveChangesAsync();
 
-            return RecipeIngredientMeasurementToDto(recipeIngredientMeasurement);
+            return _mapper.Map<RecipeIngredientMeasurementDto>(recipeIngredientMeasurement);
         }
 
         private bool RecipeIngredientMeasurementExists(long recipeId, long ingredientId, long measurementId)
         {
             return _context.RecipeIngredientMeasurement.Any(e => e.RecipeId == recipeId && e.IngredientId == ingredientId && e.MeasurementId == measurementId);
-        }
-
-        private static RecipeIngredientMeasurementDto RecipeIngredientMeasurementToDto(RecipeIngredientMeasurement recipeIngredientMeasurement)
-        {
-            return new RecipeIngredientMeasurementDto
-            {
-                RecipeId = recipeIngredientMeasurement.RecipeId,
-                IngredientId = recipeIngredientMeasurement.IngredientId,                   
-                MeasurementId = recipeIngredientMeasurement.MeasurementId,
-
-                Quantity = recipeIngredientMeasurement.Quantity
-            };
         }
     }
 }

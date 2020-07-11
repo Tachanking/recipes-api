@@ -2,8 +2,8 @@
 {
     public class RecipeToolDto
     {
-        public string RecipeName {get;set;}
-        public string ToolName { get; set; }
+        public long RecipeId { get; set; }
+        public long ToolId { get; set; }
 
         public int Quantity { get; set; }
     }
