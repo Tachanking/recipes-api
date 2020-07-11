@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Recipes_API.Utility;
 
 namespace Recipes_API.Data
 {
@@ -14,7 +15,7 @@ namespace Recipes_API.Data
             builder.Property(e => e.Name)
                 .IsRequired()
                 .HasColumnName("ingredient_name")
-                .HasMaxLength(64);
+                .HasMaxLength(Constants.NameMaxLength);
         }
     }
 }

@@ -50,10 +50,10 @@ namespace Recipes_API.Controllers
         [HttpPut("{toolId}")]
         public async Task<IActionResult> PutRecipeTool(long recipeId, long toolId, RecipeToolDto recipeToolDto)
         {
-            if (recipeId != recipeToolDto.Recipe.Id || toolId != recipeToolDto.Tool.Id)
-            {
-                return BadRequest();
-            }
+            // todo : automapper integration 
+            //              flatten DTOs
+            //              voir tuto pour la suite
+            //        Dto validations
 
             _context.Entry(recipeToolDto).State = EntityState.Modified;
 
@@ -78,25 +78,20 @@ namespace Recipes_API.Controllers
 
         // POST: api/Recipes/5/Tools
         [HttpPost]
-        public async Task<ActionResult<RecipeToolDto>> PostRecipeTool(long recipeId, RecipeToolDto recipeToolDto)
+        public async Task<ActionResult<RecipeToolDto>> PostRecipeTool(long recipeId, long toolId, RecipeToolDto recipeToolDto)
         {
-            if (recipeId != recipeToolDto.Recipe.Id)
-            {
-                return BadRequest();
-            }
-
             var recipeTool = new RecipeTool
             {
                 RecipeId = recipeId,
                 Recipe = new Recipe
                 {
                     Id = recipeId,
-                    Name = recipeToolDto.Recipe.Name
+                    Name = recipeToolDto.RecipeName
                 },
                 Tool = new Tool
                 {
-                    Id = recipeToolDto.Tool.Id,
-                    Name = recipeToolDto.Tool.Name
+                    Id = toolId,
+                    Name = recipeToolDto.ToolName
                 },
                 Quantity = recipeToolDto.Quantity
             };
@@ -132,16 +127,8 @@ namespace Recipes_API.Controllers
         {
             return new RecipeToolDto
             {
-                Recipe = new RecipeDto
-                {
-                    Id = recipeTool.Recipe.Id,
-                    Name = recipeTool.Recipe.Name
-                },
-                Tool = new ToolDto
-                {
-                    Id = recipeTool.Tool.Id,
-                    Name = recipeTool.Tool.Name
-                },
+                RecipeName = recipeTool.Recipe.Name,
+                ToolName = recipeTool.Tool.Name,
                 Quantity = recipeTool.Quantity
             };
         }

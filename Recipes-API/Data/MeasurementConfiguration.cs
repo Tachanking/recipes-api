@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Recipes_API.Utility;
 
 namespace Recipes_API.Data
 {
@@ -14,12 +15,12 @@ namespace Recipes_API.Data
             builder.Property(e => e.Name)
                 .IsRequired()
                 .HasColumnName("measurement_name")
-                .HasMaxLength(64);
+                .HasMaxLength(Constants.NameMaxLength);
 
             builder.Property(e => e.Symbol)
                 .IsRequired()
                 .HasColumnName("measurement_symbol")
-                .HasMaxLength(8);
+                .HasMaxLength(Constants.SymbolMaxLength);
         }
     }
 }

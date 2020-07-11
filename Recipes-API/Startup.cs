@@ -1,3 +1,4 @@
+using AutoMapper;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -7,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Recipes_API.Data.Validation;
+using System;
 
 namespace Recipes_API
 {
@@ -22,18 +24,25 @@ namespace Recipes_API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // NewtonsoftJSON
             services.AddControllers().AddNewtonsoftJson(options =>
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
             );
 
+            // PostgreSQL
             services.AddDbContext<RecipesContext>(options =>
                 options.UseNpgsql(Configuration.GetConnectionString("postgres")));
 
+            // Fluent Validation
             services.AddMvc(options =>
             {
                 options.Filters.Add(typeof(ValidatorActionFilter));
             }).AddFluentValidation(fvc => fvc.RegisterValidatorsFromAssemblyContaining<Startup>());
 
+            // Automapper
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+            // Swagger
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });

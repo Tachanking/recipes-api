@@ -7,7 +7,7 @@ namespace Recipes_API.Dto
         public long Id { get; set; }
         public string Name { get; set; }
 
-        public ICollection<RecipeIngredientMeasurementDto> RecipeIngredients;
+        public ICollection<RecipeIngredientMeasurementDto> RecipeIngredientMeasurements;
         public ICollection<RecipeToolDto> RecipeTools;
     }
 }

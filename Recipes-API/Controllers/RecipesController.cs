@@ -121,7 +121,12 @@ namespace Recipes_API.Controllers
             return new RecipeDto
             {
                 Id = recipe.Id,
-                Name = recipe.Name
+                Name = recipe.Name,
+                //RecipeIngredientMeasurements = new List<RecipeIngredientMeasurementDto>{
+                //    recipe.RecipeIngredientMeasurement.Select(e => e.ToDto())
+                //},
+                ////recipe.RecipeIngredientMeasurement,
+                //RecipeTools = recipe.RecipeTool
             };
         }
     }

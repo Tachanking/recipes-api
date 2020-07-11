@@ -51,9 +51,9 @@ namespace Recipes_API.Controllers
         [HttpPut("{measurementId}")]
         public async Task<IActionResult> PutRecipeIngredientMeasurement(long recipeId, long ingredientId, long measurementId, RecipeIngredientMeasurementDto recipeIngredientMeasuermentDto)
         {
-            if (recipeId != recipeIngredientMeasuermentDto.Recipe.Id || 
-                ingredientId != recipeIngredientMeasuermentDto.Ingredient.Id || 
-                measurementId != recipeIngredientMeasuermentDto.Measurement.Id)
+            if (recipeId != recipeIngredientMeasuermentDto.RecipeId || 
+                ingredientId != recipeIngredientMeasuermentDto.IngredientId || 
+                measurementId != recipeIngredientMeasuermentDto.MeasurementId)
             {
                 return BadRequest();
             }
@@ -83,33 +83,18 @@ namespace Recipes_API.Controllers
         [HttpPost]
         public async Task<ActionResult<RecipeIngredientMeasurementDto>> PostRecipeIngredientMeasurement(long recipeId, long ingredientId, RecipeIngredientMeasurementDto recipeIngredientMeasuermentDto)
         {
-            if (recipeId != recipeIngredientMeasuermentDto.Recipe.Id ||
-                ingredientId != recipeIngredientMeasuermentDto.Ingredient.Id)
+            if (recipeId != recipeIngredientMeasuermentDto.RecipeId ||
+                ingredientId != recipeIngredientMeasuermentDto.IngredientId)
             {
                 return BadRequest();
             }
 
             var recipeIngredientMeasurement = new RecipeIngredientMeasurement
             {
-                RecipeId = recipeIngredientMeasuermentDto.Recipe.Id,
-                Recipe = new Recipe
-                {
-                    Id = recipeIngredientMeasuermentDto.Recipe.Id,
-                    Name = recipeIngredientMeasuermentDto.Recipe.Name
-                },
-                IngredientId = recipeIngredientMeasuermentDto.Ingredient.Id,
-                Ingredient = new Ingredient
-                {
-                    Id = recipeIngredientMeasuermentDto.Ingredient.Id,
-                    Name = recipeIngredientMeasuermentDto.Ingredient.Name,
-                },
-                MeasurementId = recipeIngredientMeasuermentDto.Measurement.Id,
-                Measurement = new Measurement
-                {
-                    Id = recipeIngredientMeasuermentDto.Measurement.Id,
-                    Name = recipeIngredientMeasuermentDto.Measurement.Name,
-                    Symbol = recipeIngredientMeasuermentDto.Measurement.Symbol
-                },
+                RecipeId = recipeIngredientMeasuermentDto.RecipeId,
+                IngredientId = recipeIngredientMeasuermentDto.IngredientId,
+                MeasurementId = recipeIngredientMeasuermentDto.MeasurementId,
+
                 Quantity = recipeIngredientMeasuermentDto.Quantity
             };
 
@@ -118,9 +103,9 @@ namespace Recipes_API.Controllers
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetRecipeIngredientMeasurement", new { 
-                                                                            recipeId = recipeIngredientMeasuermentDto.Ingredient.Id, 
-                                                                            ingredientId = recipeIngredientMeasuermentDto.Ingredient.Id,
-                                                                            measurementId = recipeIngredientMeasuermentDto.Measurement.Id 
+                                                                            recipeId = recipeIngredientMeasuermentDto.IngredientId, 
+                                                                            ingredientId = recipeIngredientMeasuermentDto.IngredientId,
+                                                                            measurementId = recipeIngredientMeasuermentDto.MeasurementId 
                                                                         }, recipeIngredientMeasuermentDto);
         }
 
@@ -152,22 +137,10 @@ namespace Recipes_API.Controllers
         {
             return new RecipeIngredientMeasurementDto
             {
-                Recipe = new RecipeDto
-                {
-                    Id = recipeIngredientMeasurement.RecipeId,
-                    Name = recipeIngredientMeasurement.Recipe.Name
-                },
-                Ingredient = new IngredientDto
-                {
-                    Id = recipeIngredientMeasurement.IngredientId,
-                    Name = recipeIngredientMeasurement.Ingredient.Name
-                }, 
-                Measurement = new MeasurementDto
-                {
-                    Id = recipeIngredientMeasurement.MeasurementId,
-                    Name = recipeIngredientMeasurement.Measurement.Name,
-                    Symbol = recipeIngredientMeasurement.Measurement.Symbol
-                },
+                RecipeId = recipeIngredientMeasurement.RecipeId,
+                IngredientId = recipeIngredientMeasurement.IngredientId,                   
+                MeasurementId = recipeIngredientMeasurement.MeasurementId,
+
                 Quantity = recipeIngredientMeasurement.Quantity
             };
         }
