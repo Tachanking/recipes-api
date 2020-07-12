@@ -95,7 +95,7 @@ namespace Recipes_API.Controllers
             _context.Tools.Remove(tool);
             await _context.SaveChangesAsync();
 
-            return tool;
+            return _mapper.Map<ToolDto>(tool);
         }
 
         private bool ToolExists(long id)
