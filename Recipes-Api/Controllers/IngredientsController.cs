@@ -31,7 +31,7 @@ namespace Recipes_API.Controllers
 
         // GET: api/Ingredients/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<IngredientDto>> GetIngredient(int id)
+        public async Task<ActionResult<IngredientDto>> GetIngredient(long id)
         {
             var ingredient = await _context.Ingredients.Where(i => i.Id == id)
                                                         .FirstOrDefaultAsync();
@@ -48,7 +48,10 @@ namespace Recipes_API.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutIngredient(long id, IngredientDto ingredientDto)
         {
-            _context.Entry(ingredientDto).State = EntityState.Modified;
+            var ingredient = _mapper.Map<Ingredient>(ingredientDto);
+            ingredient.Id = id; // todo : oof
+
+            _context.Entry(ingredient).State = EntityState.Modified;
 
             try
             {
@@ -83,7 +86,7 @@ namespace Recipes_API.Controllers
 
         // DELETE: api/Ingredients/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<IngredientDto>> DeleteIngredient(int id)
+        public async Task<ActionResult<IngredientDto>> DeleteIngredient(long id)
         {
             var ingredient = await _context.Ingredients.FindAsync(id);
             if (ingredient is null)

@@ -46,7 +46,10 @@ namespace Recipes_API.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutTool(long id, ToolDto toolDto)
         {
-            _context.Entry(toolDto).State = EntityState.Modified;
+            var tool = _mapper.Map<Tool>(toolDto);
+            tool.Id = id; // todo : oof
+
+            _context.Entry(tool).State = EntityState.Modified;
 
             try
             {
@@ -81,7 +84,7 @@ namespace Recipes_API.Controllers
 
         // DELETE: api/Tools/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Tool>> DeleteTool(long id)
+        public async Task<ActionResult<ToolDto>> DeleteTool(long id)
         {
             var tool = await _context.Tools.FindAsync(id);
             if (tool is null)

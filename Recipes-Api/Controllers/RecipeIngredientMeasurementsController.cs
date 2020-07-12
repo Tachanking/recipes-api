@@ -30,8 +30,6 @@ namespace Recipes_API.Controllers
             return await _context.RecipeIngredientMeasurement.Where(r => r.RecipeId == recipeId && r.IngredientId == ingredientId)
                                                                 .Select(r => _mapper.Map<RecipeIngredientMeasurementDto>(r))
                                                                 .ToListAsync();
-
-            // todo : NotFound(); ???
         }
 
         // GET: api/Recipes/5/Ingredients/5/Measurements/5
@@ -55,7 +53,8 @@ namespace Recipes_API.Controllers
         [HttpPut("{measurementId}")]
         public async Task<IActionResult> PutRecipeIngredientMeasurement(long recipeId, long ingredientId, long measurementId, RecipeIngredientMeasurementDto recipeIngredientMeasuermentDto)
         {
-            _context.Entry(recipeIngredientMeasuermentDto).State = EntityState.Modified;
+            var recipeIngredientMeasuerment = _mapper.Map<RecipeTool>(recipeIngredientMeasuermentDto);
+            _context.Entry(recipeIngredientMeasuerment).State = EntityState.Modified;
 
             try
             {

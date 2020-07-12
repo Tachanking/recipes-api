@@ -30,7 +30,7 @@ namespace Recipes_API.Controllers
 
         // GET: api/Recipes/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<RecipeDto>> GetRecipe(int id)
+        public async Task<ActionResult<RecipeDto>> GetRecipe(long id)
         {
             var recipe = await _context.Recipes.Where(r => r.Id == id).FirstOrDefaultAsync();
 
@@ -44,9 +44,13 @@ namespace Recipes_API.Controllers
 
         // PUT: api/Recipes/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutRecipe(int id, RecipeDto recipeDto)
+        public async Task<IActionResult> PutRecipe(long id, RecipeDto recipeDto)
         {
-            _context.Entry(recipeDto).State = EntityState.Modified;
+            var recipe = _mapper.Map<Ingredient>(recipeDto);
+            recipe.Id = id; // todo : oof
+
+
+            _context.Entry(recipe).State = EntityState.Modified;
 
             try
             {
@@ -81,7 +85,7 @@ namespace Recipes_API.Controllers
 
         // DELETE: api/Recipes/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<RecipeDto>> DeleteRecipe(int id)
+        public async Task<ActionResult<RecipeDto>> DeleteRecipe(long id)
         {
             var recipe = await _context.Recipes.FindAsync(id);
             if (recipe is null)
@@ -95,7 +99,7 @@ namespace Recipes_API.Controllers
             return _mapper.Map<RecipeDto>(recipe);
         }
 
-        private bool RecipeExists(int id)
+        private bool RecipeExists(long id)
         {
             return _context.Recipes.Any(r => r.Id == id);
         }
