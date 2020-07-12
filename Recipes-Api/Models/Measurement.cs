@@ -11,7 +11,6 @@ namespace Recipes_API
             RecipeIngredientMeasurement = new HashSet<RecipeIngredientMeasurement>();
         }
 
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long Id { get; set; }
         public string Name { get; set; }
         public string Symbol { get; set; }

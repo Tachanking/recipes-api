@@ -4,9 +4,9 @@ using Recipes_API.Utility;
 
 namespace Recipes_API.Validators
 {
-    public class IngredientDtoValidator : AbstractValidator<IngredientDto>
+    public class RecipeDtoValidator : AbstractValidator<RecipeDto>
     {
-        public IngredientDtoValidator()
+        public RecipeDtoValidator()
         {
             RuleFor(ingredient => ingredient.Name).NotNull();
             RuleFor(ingredient => ingredient.Name).MaximumLength(Constants.NameMaxLength);

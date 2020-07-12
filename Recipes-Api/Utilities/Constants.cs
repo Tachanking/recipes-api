@@ -2,7 +2,9 @@
 {
     public static class Constants
     {
-        public static int NameMaxLength = 64; // todo : pilotage ?
+        // todo : pilotage ?
+        public static int IdMinimumValue = 1; // default postgresql sequence minvalue
+        public static int NameMaxLength = 64;
         public static int SymbolMaxLength = 8;
     }
 }

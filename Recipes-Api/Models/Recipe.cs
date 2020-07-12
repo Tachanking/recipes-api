@@ -12,7 +12,6 @@ namespace Recipes_API
             RecipeTool = new HashSet<RecipeTool>();
         }
 
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long Id { get; set; }
         public string Name { get; set; }
 

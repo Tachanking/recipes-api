@@ -10,7 +10,7 @@ namespace Recipes_API.Data
         {
             builder.ToTable("ingredient");
 
-            builder.Property(e => e.Id).HasColumnName("ingredient_id");
+            builder.Property(e => e.Id).HasColumnName("ingredient_id").ValueGeneratedOnAdd();
 
             builder.Property(e => e.Name)
                 .IsRequired()
