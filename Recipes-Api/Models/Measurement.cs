@@ -1,6 +1,5 @@
 ﻿using Recipes_API.Models;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Recipes_API
 {
