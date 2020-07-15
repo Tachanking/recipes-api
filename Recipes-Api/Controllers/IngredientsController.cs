@@ -25,21 +25,17 @@ namespace Recipes_API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<IngredientDto>>> GetIngredients()
         { 
-            return await _context.Ingredients.Select(i => _mapper.Map<IngredientDto>(i))
-                                                .ToListAsync();
+            return await _context.Ingredients.Select(i => _mapper.Map<IngredientDto>(i)).ToListAsync();
         }
 
         // GET: api/Ingredients/5
         [HttpGet("{id}")]
         public async Task<ActionResult<IngredientDto>> GetIngredient(long id)
         {
-            var ingredient = await _context.Ingredients.Where(i => i.Id == id)
-                                                        .FirstOrDefaultAsync();
+            var ingredient = await _context.Ingredients.FindAsync(id);
 
             if (ingredient is null)
-            {
                 return NotFound();
-            }
 
             return _mapper.Map<IngredientDto>(ingredient);
         }
@@ -48,9 +44,10 @@ namespace Recipes_API.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutIngredient(long id, IngredientDto ingredientDto)
         {
-            var ingredient = _mapper.Map<Ingredient>(ingredientDto);
-            ingredient.Id = id; // todo : oof
+            if (id != ingredientDto.Id)
+                return BadRequest();
 
+            var ingredient = _mapper.Map<Ingredient>(ingredientDto);
             _context.Entry(ingredient).State = EntityState.Modified;
 
             try
@@ -89,10 +86,8 @@ namespace Recipes_API.Controllers
         public async Task<ActionResult<IngredientDto>> DeleteIngredient(long id)
         {
             var ingredient = await _context.Ingredients.FindAsync(id);
-            if (ingredient is null)
-            {
+            if (ingredient is null)          
                 return NotFound();
-            }
 
             _context.Ingredients.Remove(ingredient);
             await _context.SaveChangesAsync();

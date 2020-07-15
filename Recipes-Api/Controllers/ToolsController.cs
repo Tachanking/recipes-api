@@ -33,11 +33,8 @@ namespace Recipes_API.Controllers
         public async Task<ActionResult<ToolDto>> GetTool(long id)
         {
             var tool = await _context.Tools.FindAsync(id);
-
             if (tool is null)
-            {
                 return NotFound();
-            }
 
             return _mapper.Map<ToolDto>(tool);
         }
@@ -46,9 +43,10 @@ namespace Recipes_API.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutTool(long id, ToolDto toolDto)
         {
-            var tool = _mapper.Map<Tool>(toolDto);
-            tool.Id = id; // todo : oof
+            if (id != toolDto.Id)
+                return BadRequest();
 
+            var tool = _mapper.Map<Tool>(toolDto);
             _context.Entry(tool).State = EntityState.Modified;
 
             try
@@ -88,9 +86,7 @@ namespace Recipes_API.Controllers
         {
             var tool = await _context.Tools.FindAsync(id);
             if (tool is null)
-            {
                 return NotFound();
-            }
 
             _context.Tools.Remove(tool);
             await _context.SaveChangesAsync();

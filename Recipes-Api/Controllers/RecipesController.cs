@@ -32,12 +32,9 @@ namespace Recipes_API.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<RecipeDto>> GetRecipe(long id)
         {
-            var recipe = await _context.Recipes.Where(r => r.Id == id).FirstOrDefaultAsync();
-
+            var recipe = await _context.Recipes.FindAsync(id);
             if (recipe is null)
-            {
                 return NotFound();
-            }
 
             return _mapper.Map<RecipeDto>(recipe);
         }
@@ -46,10 +43,10 @@ namespace Recipes_API.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutRecipe(long id, RecipeDto recipeDto)
         {
+            if (id != recipeDto.Id)
+                return BadRequest();
+
             var recipe = _mapper.Map<Ingredient>(recipeDto);
-            recipe.Id = id; // todo : oof
-
-
             _context.Entry(recipe).State = EntityState.Modified;
 
             try
@@ -89,9 +86,7 @@ namespace Recipes_API.Controllers
         {
             var recipe = await _context.Recipes.FindAsync(id);
             if (recipe is null)
-            {
                 return NotFound();
-            }
 
             _context.Recipes.Remove(recipe);
             await _context.SaveChangesAsync();

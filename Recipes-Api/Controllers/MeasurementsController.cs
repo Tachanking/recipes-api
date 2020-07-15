@@ -35,9 +35,7 @@ namespace Recipes_API.Controllers
             var measurement = await _context.Measurements.FindAsync(id);
 
             if (measurement is null)
-            {
                 return NotFound();
-            }
 
             return _mapper.Map<MeasurementDto>(measurement);
         }
@@ -46,9 +44,10 @@ namespace Recipes_API.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutMeasurement(long id, MeasurementDto measurementDto)
         {
-            var measurement = _mapper.Map<Measurement>(measurementDto);
-            measurement.Id = id; // todo : oof
+            if (id != measurementDto.Id)
+                return BadRequest();
 
+            var measurement = _mapper.Map<Measurement>(measurementDto);
             _context.Entry(measurement).State = EntityState.Modified;
 
             try
@@ -88,9 +87,7 @@ namespace Recipes_API.Controllers
         {
             var measurement = await _context.Measurements.FindAsync(id);
             if (measurement is null)
-            {
                 return NotFound();
-            }
 
             _context.Measurements.Remove(measurement);
             await _context.SaveChangesAsync();
