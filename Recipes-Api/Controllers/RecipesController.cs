@@ -46,7 +46,7 @@ namespace Recipes_API.Controllers
             if (id != recipeDto.Id)
                 return BadRequest();
 
-            var recipe = _mapper.Map<Ingredient>(recipeDto);
+            var recipe = _mapper.Map<Recipe>(recipeDto);
             _context.Entry(recipe).State = EntityState.Modified;
 
             try

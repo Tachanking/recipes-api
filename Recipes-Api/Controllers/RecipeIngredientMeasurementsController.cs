@@ -49,11 +49,18 @@ namespace Recipes_API.Controllers
             return _mapper.Map<RecipeIngredientMeasurementDto>(recipeIngredientMeasurement);
         }
 
-        // PUT: api/Recipes/5/Ingredients/5/Measurements
+        // PUT: api/Recipes/5/Ingredients/5/Measurements/5
         [HttpPut("{measurementId}")]
         public async Task<IActionResult> PutRecipeIngredientMeasurement(long recipeId, long ingredientId, long measurementId, RecipeIngredientMeasurementDto recipeIngredientMeasuermentDto)
         {
-            var recipeIngredientMeasuerment = _mapper.Map<RecipeTool>(recipeIngredientMeasuermentDto);
+            if (recipeId != recipeIngredientMeasuermentDto.RecipeId ||
+                ingredientId != recipeIngredientMeasuermentDto.IngredientId ||
+                measurementId != recipeIngredientMeasuermentDto.MeasurementId)
+            {
+                return BadRequest();
+            }
+
+            var recipeIngredientMeasuerment = _mapper.Map<RecipeIngredientMeasurement>(recipeIngredientMeasuermentDto);
             _context.Entry(recipeIngredientMeasuerment).State = EntityState.Modified;
 
             try

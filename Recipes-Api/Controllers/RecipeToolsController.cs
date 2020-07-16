@@ -46,8 +46,11 @@ namespace Recipes_API.Controllers
 
         // PUT: api/Recipes/5/Tools/4
         [HttpPut("{toolId}")]
-        public async Task<IActionResult> PutRecipeTool(long recipeId, long toolId, RecipeToolDto recipeToolDto) // todo : IDs?
+        public async Task<IActionResult> PutRecipeTool(long recipeId, long toolId, RecipeToolDto recipeToolDto)
         {
+            if (recipeId != recipeToolDto.RecipeId || toolId != recipeToolDto.ToolId)
+                return BadRequest();
+
             var recipeTool = _mapper.Map<RecipeTool>(recipeToolDto);
             _context.Entry(recipeTool).State = EntityState.Modified;
 
