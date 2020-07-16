@@ -8,14 +8,17 @@ namespace Recipes_API.Validators
     {
         public RecipeIngredientMeasurementDtoValidator()
         {
-            RuleFor(tool => tool.RecipeId).NotNull();
-            RuleFor(tool => tool.RecipeId).GreaterThanOrEqualTo(Constants.IdMinimumValue);
+            RuleFor(recipeIngredientMeasurement => recipeIngredientMeasurement.RecipeId).NotNull();
+            RuleFor(recipeIngredientMeasurement => recipeIngredientMeasurement.RecipeId).GreaterThanOrEqualTo(Constants.IdMinimumValue);
 
-            RuleFor(tool => tool.IngredientId).NotNull();
-            RuleFor(tool => tool.IngredientId).GreaterThanOrEqualTo(Constants.IdMinimumValue);
+            RuleFor(recipeIngredientMeasurement => recipeIngredientMeasurement.IngredientId).NotNull();
+            RuleFor(recipeIngredientMeasurement => recipeIngredientMeasurement.IngredientId).GreaterThanOrEqualTo(Constants.IdMinimumValue);
+            
+            RuleFor(recipeIngredientMeasurement => recipeIngredientMeasurement.MeasurementId).NotNull();
+            RuleFor(recipeIngredientMeasurement => recipeIngredientMeasurement.MeasurementId).GreaterThanOrEqualTo(Constants.IdMinimumValue);
 
-            RuleFor(tool => tool.MeasurementId).NotNull();
-            RuleFor(tool => tool.MeasurementId).GreaterThanOrEqualTo(Constants.IdMinimumValue);
+            RuleFor(recipeIngredientMeasurement => recipeIngredientMeasurement.Quantity).NotNull();
+            RuleFor(recipeIngredientMeasurement => recipeIngredientMeasurement.Quantity).GreaterThanOrEqualTo(Constants.IngredientMinimumQuantity);
         }
     }
 }

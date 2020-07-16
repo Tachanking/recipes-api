@@ -6,6 +6,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="DBScripts\**" />
+    <Content Remove="DBScripts\**" />
+    <EmbeddedResource Remove="DBScripts\**" />
+    <None Remove="DBScripts\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="10.0.0" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.0.0" />
     <PackageReference Include="FluentValidation.AspNetCore" Version="8.6.2" />

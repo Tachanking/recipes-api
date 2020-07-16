@@ -8,11 +8,14 @@ namespace Recipes_API.Validators
     {
         public RecipeToolDtoValidator()
         {
-            RuleFor(tool => tool.RecipeId).NotNull();
-            RuleFor(tool => tool.RecipeId).GreaterThanOrEqualTo(Constants.IdMinimumValue);
+            RuleFor(recipeTool => recipeTool.RecipeId).NotNull();
+            RuleFor(recipeTool => recipeTool.RecipeId).GreaterThanOrEqualTo(Constants.IdMinimumValue);
 
-            RuleFor(tool => tool.ToolId).NotNull();
-            RuleFor(tool => tool.ToolId).GreaterThanOrEqualTo(Constants.IdMinimumValue);
+            RuleFor(recipeTool => recipeTool.ToolId).NotNull();
+            RuleFor(recipeTool => recipeTool.ToolId).GreaterThanOrEqualTo(Constants.IdMinimumValue);
+
+            RuleFor(recipeTool => recipeTool.Quantity).NotNull();
+            RuleFor(recipeTool => recipeTool.Quantity).GreaterThanOrEqualTo(Constants.ToolMinimumQuantity);
         }
     }
 }

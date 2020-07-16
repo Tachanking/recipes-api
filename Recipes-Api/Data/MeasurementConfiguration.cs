@@ -15,12 +15,12 @@ namespace Recipes_API.Data
             builder.Property(e => e.Name)
                 .IsRequired()
                 .HasColumnName("measurement_name")
-                .HasMaxLength(Constants.NameMaxLength);
+                .HasMaxLength(Constants.NameMaximumLength);
 
             builder.Property(e => e.Symbol)
                 .IsRequired()
                 .HasColumnName("measurement_symbol")
-                .HasMaxLength(Constants.SymbolMaxLength);
+                .HasMaxLength(Constants.SymbolMaximumLength);
         }
     }
 }

@@ -15,7 +15,7 @@ namespace Recipes_API.Data
             builder.Property(e => e.Name)
                 .IsRequired()
                 .HasColumnName("recipe_name")
-                .HasMaxLength(Constants.NameMaxLength);
+                .HasMaxLength(Constants.NameMaximumLength);
         }
     }
 }
