@@ -1,4 +1,4 @@
-﻿namespace Recipes_API
+﻿namespace Recipes_Api
 {
     public partial class RecipeTool
     {

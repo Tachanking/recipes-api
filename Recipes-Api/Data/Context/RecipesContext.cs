@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Recipes_API.Data;
-using Recipes_API.Models;
+using Recipes_Api.Data;
+using Recipes_Api.Models;
 
-namespace Recipes_API
+namespace Recipes_Api
 {
     public partial class RecipesContext : DbContext
     {
@@ -38,6 +38,6 @@ namespace Recipes_API
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 
-        public DbSet<Recipes_API.Models.RecipeIngredientMeasurement> RecipeIngredientMeasurement { get; set; }
+        public DbSet<Recipes_Api.Models.RecipeIngredientMeasurement> RecipeIngredientMeasurement { get; set; }
     }
 }

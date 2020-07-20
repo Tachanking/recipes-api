@@ -4,10 +4,10 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Recipes_API.Dto;
-using Recipes_API.Models;
+using Recipes_Api.Dto;
+using Recipes_Api.Models;
 
-namespace Recipes_API.Controllers
+namespace Recipes_Api.Controllers
 {
     [Route("api/Recipes/{recipeId}/Ingredients/{ingredientId}/Measurements")]
     [ApiController]

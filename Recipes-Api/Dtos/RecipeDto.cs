@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Recipes_API.Dto
+namespace Recipes_Api.Dto
 {
     public class RecipeDto
     {

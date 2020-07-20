@@ -1,7 +1,7 @@
-﻿using Recipes_API.Models;
+﻿using Recipes_Api.Models;
 using System.Collections.Generic;
 
-namespace Recipes_API
+namespace Recipes_Api
 {
     public partial class Ingredient
     {

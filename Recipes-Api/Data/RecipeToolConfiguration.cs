@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Recipes_API.Data
+namespace Recipes_Api.Data
 {
     public class RecipeToolConfiguration : IEntityTypeConfiguration<RecipeTool>
     {

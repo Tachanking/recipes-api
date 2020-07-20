@@ -4,9 +4,9 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Recipes_API.Dto;
+using Recipes_Api.Dto;
 
-namespace Recipes_API.Controllers
+namespace Recipes_Api.Controllers
 {
     [Route("api/Recipes/{recipeId}/Tools")]
     [ApiController]

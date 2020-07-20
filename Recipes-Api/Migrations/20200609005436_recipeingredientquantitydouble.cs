@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace Recipes_API.Migrations
+namespace Recipes_Api.Migrations
 {
     public partial class recipeingredientquantitydouble : Migration
     {

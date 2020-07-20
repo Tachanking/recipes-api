@@ -1,4 +1,4 @@
-﻿namespace Recipes_API.Utility
+﻿namespace Recipes_Api.Utility
 {
     public static class Constants
     {

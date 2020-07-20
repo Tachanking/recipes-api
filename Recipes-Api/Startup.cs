@@ -7,10 +7,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using Recipes_API.Data.Validation;
+using Recipes_Api.Data.Validation;
 using System;
 
-namespace Recipes_API
+namespace Recipes_Api
 {
     public class Startup
     {

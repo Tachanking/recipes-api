@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using Recipes_API;
+using Recipes_Api;
 
-namespace Recipes_API.Migrations
+namespace Recipes_Api.Migrations
 {
     [DbContext(typeof(RecipesContext))]
     [Migration("20200712044207_fluent-autoincrement")]

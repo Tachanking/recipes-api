@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Recipes_API.Data.Validation
+namespace Recipes_Api.Data.Validation
 {
     public class ValidatorActionFilter : IActionFilter
     {

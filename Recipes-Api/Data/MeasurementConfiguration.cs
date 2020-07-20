@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Recipes_API.Utility;
+using Recipes_Api.Utility;
 
-namespace Recipes_API.Data
+namespace Recipes_Api.Data
 {
     public class MeasurementConfiguration : IEntityTypeConfiguration<Measurement>
     {

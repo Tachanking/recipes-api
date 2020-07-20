@@ -1,4 +1,4 @@
-﻿namespace Recipes_API.Models
+﻿namespace Recipes_Api.Models
 {
     public class RecipeIngredientMeasurement
     {

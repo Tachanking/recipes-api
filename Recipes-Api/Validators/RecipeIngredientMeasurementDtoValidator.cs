@@ -1,8 +1,8 @@
 ﻿using FluentValidation;
-using Recipes_API.Dto;
-using Recipes_API.Utility;
+using Recipes_Api.Dto;
+using Recipes_Api.Utility;
 
-namespace Recipes_API.Validators
+namespace Recipes_Api.Validators
 {
     public class RecipeIngredientMeasurementDtoValidator : AbstractValidator<RecipeIngredientMeasurementDto>
     {
