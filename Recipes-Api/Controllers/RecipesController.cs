@@ -25,14 +25,28 @@ namespace Recipes_Api.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<RecipeDto>>> GetRecipes()
         {
-            return await _context.Recipes.Select(r => _mapper.Map<RecipeDto>(r)).ToListAsync();
+            return await _context.Recipes.Include(r => r.RecipeTool)
+                                                .ThenInclude(rt => rt.Tool)
+                                            .Include(r => r.RecipeIngredientMeasurement)
+                                                .ThenInclude(rim => rim.Ingredient)
+                                            .Include(r => r.RecipeIngredientMeasurement)
+                                                .ThenInclude(rim => rim.Measurement)
+                                            .Select(r => _mapper.Map<RecipeDto>(r))
+                                            .ToListAsync();
         }
 
         // GET: api/Recipes/5
         [HttpGet("{id}")]
         public async Task<ActionResult<RecipeDto>> GetRecipe(long id)
         {
-            var recipe = await _context.Recipes.FindAsync(id);
+            var recipe = await _context.Recipes.Include(r => r.RecipeTool) // todo : DRY
+                                                .ThenInclude(rt => rt.Tool)
+                                            .Include(r => r.RecipeIngredientMeasurement)
+                                                .ThenInclude(rim => rim.Ingredient)
+                                            .Include(r => r.RecipeIngredientMeasurement)
+                                                .ThenInclude(rim => rim.Measurement)
+                                            .Where(r => r.Id == id)
+                                            .FirstOrDefaultAsync();
             if (recipe is null)
                 return NotFound();
 
@@ -92,6 +106,62 @@ namespace Recipes_Api.Controllers
             await _context.SaveChangesAsync();
 
             return _mapper.Map<RecipeDto>(recipe);
+        }
+
+        // GET: api/Recipes/5/Tools
+        [HttpGet("{recipeId}/Tools")]
+        public async Task<ActionResult<IEnumerable<ToolDto>>> GetRecipeTools(long recipeId)
+        {
+            return await _context.Tools.Include(t => t.RecipeTool)
+                                        .Where(r => r.RecipeTool.Any(rt => rt.RecipeId == recipeId))
+                                        .Select(rt => _mapper.Map<ToolDto>(rt))
+                                        .ToListAsync();
+        }
+
+        // GET: api/Recipes/5/Tools/4
+        [HttpGet("{recipeId}/Tools/{toolId}")]
+        public async Task<ActionResult<ToolDto>> GetRecipeTool(long recipeId, long toolId)
+        {
+            var tool = await _context.Tools.Include(t => t.RecipeTool)
+                                                .Where(r => r.RecipeTool.Any(rt => rt.RecipeId == recipeId &&
+                                                                                rt.ToolId == toolId)
+                                                    ).FirstOrDefaultAsync();
+
+            if (tool is null)
+            {
+                return NotFound();
+            }
+
+            return _mapper.Map<ToolDto>(tool);
+        }
+
+        // GET: api/Recipes/5/Ingredients/5/Measurements
+        [HttpGet("{recipeId}/Ingredients/{ingredientId}/Measurements")]
+        public async Task<ActionResult<IEnumerable<MeasurementDto>>> GetRecipeIngredientMeasurements(long recipeId, long ingredientId)
+        {
+            return await _context.Measurements.Include(m => m.RecipeIngredientMeasurement)
+                                                .Where(r => r.RecipeIngredientMeasurement.Any(rim => rim.RecipeId == recipeId && 
+                                                                                                rim.IngredientId == ingredientId))
+                                                .Select(r => _mapper.Map<MeasurementDto>(r))
+                                                .ToListAsync();
+        }
+
+        // GET: api/Recipes/5/Ingredients/5/Measurements/5
+        [HttpGet("{recipeId}/Ingredients/{ingredientId}/Measurements/{measurementId}")]
+        public async Task<ActionResult<MeasurementDto>> GetRecipeIngredientMeasurement(long recipeId, long ingredientId, long measurementId)
+        {
+            var measurement = await _context.Measurements.Include(m => m.RecipeIngredientMeasurement)
+                                                            .Where(r => r.RecipeIngredientMeasurement.Any(rim => rim.RecipeId == recipeId &&
+                                                                                                                    rim.IngredientId == ingredientId &&
+                                                                                                                    rim.MeasurementId == measurementId)
+                                                            ).FirstOrDefaultAsync();
+
+            if (measurement == null)
+            {
+                return NotFound();
+            }
+
+            return _mapper.Map<MeasurementDto>(measurement);
         }
 
         private bool RecipeExists(long id)

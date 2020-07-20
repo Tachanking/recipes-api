@@ -21,29 +21,6 @@ namespace Recipes_Api.Controllers
             _mapper = mapper;
         }
 
-        // GET: api/Recipes/5/Tools
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<RecipeToolDto>>> GetRecipeTools(long recipeId)
-        {
-            return await _context.RecipeTools.Where(rt => rt.Recipe.Id == recipeId)
-                                                .Select(rt => _mapper.Map<RecipeToolDto>(rt))
-                                                .ToListAsync();
-        }
-
-        // GET: api/Recipes/5/Tools/4
-        [HttpGet("{toolId}")]
-        public async Task<ActionResult<RecipeToolDto>> GetRecipeTool(long recipeId, long toolId)
-        {
-            var recipeTool = await _context.RecipeTools.Where(rt => rt.Recipe.Id == recipeId && rt.Tool.Id == toolId).FirstOrDefaultAsync();
-
-            if (recipeTool is null)
-            {
-                return NotFound();
-            }
-
-            return _mapper.Map<RecipeToolDto>(recipeTool);
-        }
-
         // PUT: api/Recipes/5/Tools/4
         [HttpPut("{toolId}")]
         public async Task<IActionResult> PutRecipeTool(long recipeId, long toolId, RecipeToolDto recipeToolDto)

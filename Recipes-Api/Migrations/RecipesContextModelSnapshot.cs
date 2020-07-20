@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Recipes_Api;
 
-namespace Recipes_Api.Migrations
+namespace Recipes_API.Migrations
 {
     [DbContext(typeof(RecipesContext))]
     partial class RecipesContextModelSnapshot : ModelSnapshot
@@ -19,7 +19,7 @@ namespace Recipes_Api.Migrations
                 .HasAnnotation("ProductVersion", "3.1.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-            modelBuilder.Entity("Recipes_API.Ingredient", b =>
+            modelBuilder.Entity("Recipes_Api.Ingredient", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -38,7 +38,7 @@ namespace Recipes_Api.Migrations
                     b.ToTable("ingredient");
                 });
 
-            modelBuilder.Entity("Recipes_API.Measurement", b =>
+            modelBuilder.Entity("Recipes_Api.Measurement", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -63,7 +63,7 @@ namespace Recipes_Api.Migrations
                     b.ToTable("measurement");
                 });
 
-            modelBuilder.Entity("Recipes_API.Models.RecipeIngredientMeasurement", b =>
+            modelBuilder.Entity("Recipes_Api.Models.RecipeIngredientMeasurement", b =>
                 {
                     b.Property<long>("RecipeId")
                         .ValueGeneratedOnAdd()
@@ -97,7 +97,7 @@ namespace Recipes_Api.Migrations
                     b.ToTable("recipe_ingredient_measurement");
                 });
 
-            modelBuilder.Entity("Recipes_API.Recipe", b =>
+            modelBuilder.Entity("Recipes_Api.Recipe", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -116,7 +116,7 @@ namespace Recipes_Api.Migrations
                     b.ToTable("recipe");
                 });
 
-            modelBuilder.Entity("Recipes_API.RecipeTool", b =>
+            modelBuilder.Entity("Recipes_Api.RecipeTool", b =>
                 {
                     b.Property<long>("RecipeId")
                         .ValueGeneratedOnAdd()
@@ -142,7 +142,7 @@ namespace Recipes_Api.Migrations
                     b.ToTable("recipe_tool");
                 });
 
-            modelBuilder.Entity("Recipes_API.Tool", b =>
+            modelBuilder.Entity("Recipes_Api.Tool", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -161,36 +161,36 @@ namespace Recipes_Api.Migrations
                     b.ToTable("tool");
                 });
 
-            modelBuilder.Entity("Recipes_API.Models.RecipeIngredientMeasurement", b =>
+            modelBuilder.Entity("Recipes_Api.Models.RecipeIngredientMeasurement", b =>
                 {
-                    b.HasOne("Recipes_API.Ingredient", "Ingredient")
+                    b.HasOne("Recipes_Api.Ingredient", "Ingredient")
                         .WithMany("RecipeIngredientMeasurement")
                         .HasForeignKey("IngredientId")
                         .HasConstraintName("recipe_ingredient_measurement_ingredient_id_fkey")
                         .IsRequired();
 
-                    b.HasOne("Recipes_API.Measurement", "Measurement")
+                    b.HasOne("Recipes_Api.Measurement", "Measurement")
                         .WithMany("RecipeIngredientMeasurement")
                         .HasForeignKey("MeasurementId")
                         .HasConstraintName("recipe_ingredient_measurement_measurement_id_fkey")
                         .IsRequired();
 
-                    b.HasOne("Recipes_API.Recipe", "Recipe")
+                    b.HasOne("Recipes_Api.Recipe", "Recipe")
                         .WithMany("RecipeIngredientMeasurement")
                         .HasForeignKey("RecipeId")
                         .HasConstraintName("recipe_ingredient_measurement_recipe_id_fkey")
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Recipes_API.RecipeTool", b =>
+            modelBuilder.Entity("Recipes_Api.RecipeTool", b =>
                 {
-                    b.HasOne("Recipes_API.Recipe", "Recipe")
+                    b.HasOne("Recipes_Api.Recipe", "Recipe")
                         .WithMany("RecipeTool")
                         .HasForeignKey("RecipeId")
                         .HasConstraintName("recipe_tool_recipe_id_fkey")
                         .IsRequired();
 
-                    b.HasOne("Recipes_API.Tool", "Tool")
+                    b.HasOne("Recipes_Api.Tool", "Tool")
                         .WithMany("RecipeTool")
                         .HasForeignKey("ToolId")
                         .HasConstraintName("recipe_tool_tool_id_fkey")

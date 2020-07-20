@@ -23,32 +23,6 @@ namespace Recipes_Api.Controllers
 
         }
 
-        // GET: api/Recipes/5/Ingredients/5/Measurements
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<RecipeIngredientMeasurementDto>>> GetRecipeIngredientMeasurements(long recipeId, long ingredientId)
-        {
-            return await _context.RecipeIngredientMeasurement.Where(r => r.RecipeId == recipeId && r.IngredientId == ingredientId)
-                                                                .Select(r => _mapper.Map<RecipeIngredientMeasurementDto>(r))
-                                                                .ToListAsync();
-        }
-
-        // GET: api/Recipes/5/Ingredients/5/Measurements/5
-        [HttpGet("{measurementId}")]
-        public async Task<ActionResult<RecipeIngredientMeasurementDto>> GetRecipeIngredientMeasurement(long recipeId, long ingredientId, long measurementId)
-        {
-            var recipeIngredientMeasurement = await _context.RecipeIngredientMeasurement.Where(r => r.RecipeId == recipeId &&
-                                                                                               r.IngredientId == ingredientId &&
-                                                                                               r.MeasurementId == measurementId
-                                                                                            ).FirstOrDefaultAsync();
-
-            if (recipeIngredientMeasurement == null)
-            {
-                return NotFound();
-            }
-
-            return _mapper.Map<RecipeIngredientMeasurementDto>(recipeIngredientMeasurement);
-        }
-
         // PUT: api/Recipes/5/Ingredients/5/Measurements/5
         [HttpPut("{measurementId}")]
         public async Task<IActionResult> PutRecipeIngredientMeasurement(long recipeId, long ingredientId, long measurementId, RecipeIngredientMeasurementDto recipeIngredientMeasuermentDto)
