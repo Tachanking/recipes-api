@@ -5,6 +5,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Recipes_Api.Dto;
+using Recipes_Api.Models;
 
 namespace Recipes_Api.Controllers
 {
@@ -25,6 +26,7 @@ namespace Recipes_Api.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<RecipeDto>>> GetRecipes()
         {
+            // todo : service classes
             return await _context.Recipes.Include(r => r.RecipeTool)
                                                 .ThenInclude(rt => rt.Tool)
                                             .Include(r => r.RecipeIngredientMeasurement)
@@ -86,7 +88,40 @@ namespace Recipes_Api.Controllers
         [HttpPost]
         public async Task<ActionResult<RecipeDto>> PostRecipe(RecipeDto recipeDto)
         {
-            var recipe = _mapper.Map<Recipe>(recipeDto);
+            // todo : automapper...
+            var recipeIngredientMeasurements = new List<RecipeIngredientMeasurement>();
+            foreach(var ingredient in recipeDto.Ingredients)
+            {
+                foreach(var measurement in ingredient.Measurements)
+                {
+                    recipeIngredientMeasurements.Add(new RecipeIngredientMeasurement()
+                    {
+                        RecipeId = recipeDto.Id,
+                        IngredientId = ingredient.Id,
+                        MeasurementId = measurement.Id,
+                        Quantity = measurement.Quantity
+                    });
+                }
+            }
+
+            var recipeTools = new List<RecipeTool>();
+            foreach(var tool in recipeDto.Tools)
+            {
+                recipeTools.Add(new RecipeTool()
+                {
+                    RecipeId = recipeDto.Id,
+                    ToolId = tool.Id,
+                    Quantity = tool.Quantity
+                });
+            }
+
+            var recipe = new Recipe()
+            {
+                Id = recipeDto.Id,
+                Name = recipeDto.Name,
+                RecipeIngredientMeasurement = recipeIngredientMeasurements,
+                RecipeTool = recipeTools
+            };
 
             _context.Recipes.Add(recipe);
             await _context.SaveChangesAsync();

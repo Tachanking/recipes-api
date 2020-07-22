@@ -7,8 +7,8 @@ namespace Recipes_Api.Profiles
     {
         public RecipeToolProfile()
         {
-            CreateMap<RecipeTool, RecipeToolDto>();
-            CreateMap<RecipeToolDto, RecipeTool>();
+            //CreateMap<RecipeTool, RecipeToolDto>();
+            //CreateMap<RecipeToolDto, RecipeTool>();
         }
     }
 }
