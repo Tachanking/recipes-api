@@ -4,13 +4,13 @@ using Recipes_Api.Models;
 
 namespace Recipes_Api
 {
-    public partial class RecipesContext : DbContext
+    public partial class RecipeContext : DbContext
     {
-        public RecipesContext()
+        public RecipeContext()
         {
         }
 
-        public RecipesContext(DbContextOptions<RecipesContext> options)
+        public RecipeContext(DbContextOptions<RecipeContext> options)
             : base(options)
         {
         }

@@ -11,12 +11,12 @@ namespace Recipes_Api.Controllers
 {
     [Route("api/Recipes/{recipeId}/Ingredients/{ingredientId}/Measurements")]
     [ApiController]
-    public class RecipeIngredientMeasurementsController : ControllerBase
+    public class RecipeIngredientMeasurementController : ControllerBase
     {
-        private readonly RecipesContext _context;
+        private readonly RecipeContext _context;
         private readonly IMapper _mapper;
 
-        public RecipeIngredientMeasurementsController(RecipesContext context, IMapper mapper)
+        public RecipeIngredientMeasurementController(RecipeContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;

@@ -7,8 +7,8 @@ using Recipes_Api;
 
 namespace Recipes_API.Migrations
 {
-    [DbContext(typeof(RecipesContext))]
-    partial class RecipesContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(RecipeContext))]
+    partial class RecipeContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {

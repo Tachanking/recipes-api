@@ -7,7 +7,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Recipes_Api.Controllers;
 using Recipes_Api.Data.Validation;
+using Recipes_API.Services;
 using System;
 
 namespace Recipes_Api
@@ -30,7 +32,7 @@ namespace Recipes_Api
             );
 
             // PostgreSQL
-            services.AddDbContext<RecipesContext>(options =>
+            services.AddDbContext<RecipeContext>(options =>
                 options.UseNpgsql(Configuration.GetConnectionString("postgres")));
 
             // Fluent Validation
@@ -47,6 +49,8 @@ namespace Recipes_Api
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
             });
+
+            services.AddScoped(typeof(IRecipeService), typeof(RecipeService));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

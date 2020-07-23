@@ -8,7 +8,7 @@ using Recipes_Api;
 
 namespace Recipes_API.Migrations
 {
-    [DbContext(typeof(RecipesContext))]
+    [DbContext(typeof(RecipeContext))]
     [Migration("20200720021831_initial-create")]
     partial class initialcreate
     {
