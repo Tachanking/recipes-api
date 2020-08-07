@@ -9,7 +9,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Recipes_Api.Controllers;
 using Recipes_Api.Data.Validation;
-using Recipes_API.Services;
+using Recipes_Api.Services;
 using System;
 
 namespace Recipes_Api

@@ -1,8 +1,8 @@
-﻿using Recipes_Api;
+﻿using Recipes_Api.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Recipes_API.Services
+namespace Recipes_Api.Services
 {
     public interface IRecipeService
     {
@@ -23,5 +23,17 @@ namespace Recipes_API.Services
         public Task<IEnumerable<Measurement>> GetRecipeIngredientMeasurements(long recipeId, long ingredientId);
 
         public Task<Measurement> GetRecipeIngredientMeasurement(long recipeId, long ingredientId, long measurementId);
+
+        public Task PutRecipeIngredientMeasurement(long recipeId, long ingredientId, long measurementId, Measurement measurement);
+
+        public Task<Measurement> PostRecipeIngredientMeasurement(long recipeId, long ingredientId, Measurement measurement);
+
+        public Task<Measurement> DeleteRecipeIngredientMeasurement(long recipeId, long ingredientId, long measurementId);
+
+        public Task PutRecipeTool(long recipeId, long toolId, Tool tool);
+
+        public Task<Tool> PostRecipeTool(Tool tool);
+
+        public Task<Tool> DeleteRecipeTool(long recipeId, long toolId);
     }
 }

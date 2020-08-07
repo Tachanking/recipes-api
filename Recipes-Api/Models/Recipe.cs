@@ -1,7 +1,6 @@
-﻿using Recipes_Api.Models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-namespace Recipes_Api
+namespace Recipes_Api.Models
 {
     public partial class Recipe
     {

@@ -4,7 +4,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Recipes_Api.Dto;
 using Recipes_Api.Models;
-using Recipes_API.Services;
+using Recipes_Api.Services;
 
 namespace Recipes_Api.Controllers
 {
@@ -36,7 +36,7 @@ namespace Recipes_Api.Controllers
             var recipe = await _recipeService.GetRecipe(id);
 
             if (recipe is null)
-                return NotFound();
+                return NotFound(); // todo : error handling
 
             return _mapper.Map<RecipeDto>(recipe);
         }
@@ -45,14 +45,16 @@ namespace Recipes_Api.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutRecipe(long id, RecipeDto recipeDto)
         {
-            if (id != recipeDto.Id)
-                return BadRequest();
+            // only recipe name was updated
 
-            var recipe = _mapper.Map<Recipe>(recipeDto);
+            if (id != recipeDto.Id)
+                return BadRequest(); // todo : error handling
+
+            var recipe = MapDtoToRecipe(recipeDto); // todo : fix automapper profile...
             var isUpdated = await _recipeService.PutRecipe(id, recipe);
 
             if (!isUpdated)
-                return NotFound();
+                return NotFound(); // todo : error handling
 
             return NoContent();
         }
@@ -61,43 +63,11 @@ namespace Recipes_Api.Controllers
         [HttpPost]
         public async Task<ActionResult<RecipeDto>> PostRecipe(RecipeDto recipeDto)
         {
-            // todo : automapper...
-            var recipeIngredientMeasurements = new List<RecipeIngredientMeasurement>();
-            foreach(var ingredient in recipeDto.Ingredients)
-            {
-                foreach(var measurement in ingredient.Measurements)
-                {
-                    recipeIngredientMeasurements.Add(new RecipeIngredientMeasurement()
-                    {
-                        RecipeId = recipeDto.Id,
-                        IngredientId = ingredient.Id,
-                        MeasurementId = measurement.Id,
-                        Quantity = measurement.Quantity
-                    });
-                }
-            }
-
-            var recipeTools = new List<RecipeTool>();
-            foreach(var tool in recipeDto.Tools)
-            {
-                recipeTools.Add(new RecipeTool()
-                {
-                    RecipeId = recipeDto.Id,
-                    ToolId = tool.Id,
-                    Quantity = tool.Quantity
-                });
-            }
-
-            var recipe = new Recipe()
-            {
-                Id = recipeDto.Id,
-                Name = recipeDto.Name,
-                RecipeIngredientMeasurement = recipeIngredientMeasurements,
-                RecipeTool = recipeTools
-            };
-
+            // todo : automapper profile...
+            // todo : fix entity tracking issue
+            // todo : error handling
+            var recipe = MapDtoToRecipe(recipeDto);
             await _recipeService.PostRecipe(recipe);
-
             return CreatedAtAction(nameof(PostRecipe), recipeDto);
         }
 
@@ -107,50 +77,163 @@ namespace Recipes_Api.Controllers
         {            
             var isDeleted = await _recipeService.DeleteRecipe(id);
 
-            if (!isDeleted)
+            if (!isDeleted) // todo : error handling
                 return NotFound();
 
             return NoContent();
         }
 
-        // GET: api/Recipes/5/Tools
-        [HttpGet("{recipeId}/Tools")]
-        public async Task<ActionResult<IEnumerable<ToolDto>>> GetRecipeTools(long recipeId)
+        //// GET: api/Recipes/5/Tools
+        //[HttpGet("{recipeId}/Tools")]
+        //public async Task<ActionResult<IEnumerable<ToolDto>>> GetRecipeTools(long recipeId)
+        //{
+        //    var recipeTools = await _recipeService.GetRecipeTools(recipeId);
+        //    return _mapper.Map<List<ToolDto>>(recipeTools);
+        //}
+
+        //// GET: api/Recipes/5/Tools/4
+        //[HttpGet("{recipeId}/Tools/{toolId}")]
+        //public async Task<ActionResult<ToolDto>> GetRecipeTool(long recipeId, long toolId)
+        //{
+        //    var tool = await _recipeService.GetRecipeTool(recipeId, toolId);
+
+        //    if (tool is null)
+        //        return NotFound(); // todo : error handling
+
+        //    return _mapper.Map<ToolDto>(tool);
+        //}
+
+        //// GET: api/Recipes/5/Ingredients/5/Measurements
+        //[HttpGet("{recipeId}/Ingredients/{ingredientId}/Measurements")]
+        //public async Task<ActionResult<IEnumerable<MeasurementDto>>> GetRecipeIngredientMeasurements(long recipeId, long ingredientId)
+        //{
+        //    var recipeIngredientMeasurements = await _recipeService.GetRecipeIngredientMeasurements(recipeId, ingredientId);
+        //    return _mapper.Map<List<MeasurementDto>>(recipeIngredientMeasurements);
+        //}
+
+        //// GET: api/Recipes/5/Ingredients/5/Measurements/5
+        //[HttpGet("{recipeId}/Ingredients/{ingredientId}/Measurements/{measurementId}")]
+        //public async Task<ActionResult<MeasurementDto>> GetRecipeIngredientMeasurement(long recipeId, long ingredientId, long measurementId)
+        //{
+        //    var measurement = await _recipeService.GetRecipeIngredientMeasurement(recipeId, ingredientId, measurementId);
+
+        //    if (measurement == null)
+        //        return NotFound(); // todo : error handling
+
+        //    return _mapper.Map<MeasurementDto>(measurement);
+        //}
+
+        //// FROM HERE -------------------------------------------------------------
+
+        //// PUT: api/Recipes/5/Ingredients/5/Measurements/5
+        //[HttpPut("{recipeId}/Ingredients/{ingredientId}/Measurements/{measurementId}")]
+        //public async Task<IActionResult> PutRecipeIngredientMeasurement(long recipeId, long ingredientId, long measurementId, MeasurementDto measurementDto)
+        //{
+        //    if (measurementId != measurementDto.Id)
+        //        return BadRequest();            // todo : error handling
+
+        //    var measurement = _mapper.Map<Measurement>(measurementDto);
+        //    await _recipeService.PutRecipeIngredientMeasurement(recipeId, ingredientId, measurementId, measurement);
+
+        //    return NoContent();
+        //}
+
+        //// POST: api/Recipes/5/Ingredients/5/Measurements
+        //[HttpPost("{recipeId}/Ingredients/{ingredientId}/Measurements")]
+        //public async Task<ActionResult<MeasurementDto>> PostRecipeIngredientMeasurement(long recipeId, long ingredientId, MeasurementDto measurementDto)
+        //{
+        //    var measurement = _mapper.Map<Measurement>(measurementDto);
+        //    await _recipeService.PostRecipeIngredientMeasurement(recipeId, ingredientId, measurement);
+        //    return CreatedAtAction("GetRecipeIngredientMeasurement", new { measurementId = measurementDto.Id }, measurementDto);
+        //}
+
+        //// DELETE: api/Recipes/5/Ingredients/5/Measurements/5
+        //[HttpDelete("{recipeId}/Ingredients/{ingredientId}/Measurements/{measurementId}")]
+        //public async Task<ActionResult<MeasurementDto>> DeleteRecipeIngredientMeasurement(long recipeId, long ingredientId, long measurementId)
+        //{
+        //    var measurement = await _recipeService.DeleteRecipeIngredientMeasurement(recipeId, ingredientId, measurementId);
+        //    return _mapper.Map<MeasurementDto>(measurement);
+        //}
+
+        //// PUT: api/Recipes/5/Tools/4
+        //[HttpPut("{recipeId}/Tools/{toolId}")]
+        //public async Task<IActionResult> PutRecipeTool(long recipeId, long toolId, ToolDto toolDto)
+        //{
+        //    var ok = recipeId;
+        //    if (toolId != toolDto.Id)
+        //        return BadRequest(); // toto : error handling
+
+        //    var tool = _mapper.Map<Tool>(toolDto);
+        //    await _recipeService.PostRecipeTool(tool);
+
+        //    return NoContent();
+        //}
+
+        //// POST: api/Recipes/5/Tools
+        //[HttpPost("{recipeId}/Tools/")]
+        //public async Task<ActionResult<ToolDto>> PostRecipeTool(long recipeId, ToolDto toolDto)
+        //{
+        //    var tool = _mapper.Map<Tool>(toolDto);
+        //    await _recipeService.PostRecipeTool(tool);
+        //    return CreatedAtAction("GetRecipeTool", toolDto);
+        //}
+
+        //// DELETE: api/Recipes/5/Tools/5
+        //[HttpDelete("{recipeId}/Tools/{toolId}")]
+        //public async Task<ActionResult<ToolDto>> DeleteRecipeTool(long recipeId, long toolId)
+        //{
+        //    var tool = await _recipeService.DeleteRecipeTool(recipeId, toolId);
+        //    return _mapper.Map<ToolDto>(tool);
+        //}
+
+        private Recipe MapDtoToRecipe(RecipeDto recipeDto)
         {
-            var recipeTools = await _recipeService.GetRecipeTools(recipeId);
-            return _mapper.Map<List<ToolDto>>(recipeTools);
-        }
+            var recipeIngredientMeasurements = new List<RecipeIngredientMeasurement>();
+            foreach (var ingredient in recipeDto.Ingredients)
+            {
+                foreach (var measurement in ingredient.Measurements)
+                {
+                    recipeIngredientMeasurements.Add(new RecipeIngredientMeasurement()
+                    {
+                        IngredientId = ingredient.Id,
+                        Ingredient = new Ingredient()
+                        {
+                            Id = ingredient.Id,
+                            Name = ingredient.Name
+                        },
+                        MeasurementId = measurement.Id,
+                        Measurement = new Measurement()
+                        {
+                            Id = measurement.Id,
+                            Name = measurement.Name,
+                            Symbol = measurement.Symbol
+                        },
+                        Quantity = measurement.Quantity
+                    });
+                }
+            }
 
-        // GET: api/Recipes/5/Tools/4
-        [HttpGet("{recipeId}/Tools/{toolId}")]
-        public async Task<ActionResult<ToolDto>> GetRecipeTool(long recipeId, long toolId)
-        {
-            var tool = await _recipeService.GetRecipeTool(recipeId, toolId);
+            var recipeTools = new List<RecipeTool>();
+            foreach (var tool in recipeDto.Tools)
+            {
+                recipeTools.Add(new RecipeTool()
+                {
+                    Tool = new Tool()
+                    {
+                        Id = tool.Id,
+                        Name = tool.Name,
+                    },
+                    Quantity = tool.Quantity
+                });
+            }
 
-            if (tool is null)
-                return NotFound();
-
-            return _mapper.Map<ToolDto>(tool);
-        }
-
-        // GET: api/Recipes/5/Ingredients/5/Measurements
-        [HttpGet("{recipeId}/Ingredients/{ingredientId}/Measurements")]
-        public async Task<ActionResult<IEnumerable<MeasurementDto>>> GetRecipeIngredientMeasurements(long recipeId, long ingredientId)
-        {
-            var recipeIngredientMeasurements = await _recipeService.GetRecipeIngredientMeasurements(recipeId, ingredientId);
-            return _mapper.Map<List<MeasurementDto>>(recipeIngredientMeasurements);
-        }
-
-        // GET: api/Recipes/5/Ingredients/5/Measurements/5
-        [HttpGet("{recipeId}/Ingredients/{ingredientId}/Measurements/{measurementId}")]
-        public async Task<ActionResult<MeasurementDto>> GetRecipeIngredientMeasurement(long recipeId, long ingredientId, long measurementId)
-        {
-            var measurement = await _recipeService.GetRecipeIngredientMeasurement(recipeId, ingredientId, measurementId);
-
-            if (measurement == null)
-                return NotFound();
-
-            return _mapper.Map<MeasurementDto>(measurement);
+            return new Recipe()
+            {
+                Id = recipeDto.Id,
+                Name = recipeDto.Name,
+                RecipeIngredientMeasurement = recipeIngredientMeasurements,
+                RecipeTool = recipeTools
+            };
         }
     }
 }

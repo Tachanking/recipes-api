@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Recipes_Api.Models;
 
 namespace Recipes_Api.Data
 {
@@ -25,13 +26,13 @@ namespace Recipes_Api.Data
             builder.HasOne(d => d.Recipe)
                 .WithMany(p => p.RecipeTool)
                 .HasForeignKey(d => d.RecipeId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("recipe_tool_recipe_id_fkey");
 
             builder.HasOne(d => d.Tool)
                 .WithMany(p => p.RecipeTool)
                 .HasForeignKey(d => d.ToolId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("recipe_tool_tool_id_fkey");
         }
     }

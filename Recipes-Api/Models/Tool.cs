@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Recipes_Api
+namespace Recipes_Api.Models
 {
     public partial class Tool
     {

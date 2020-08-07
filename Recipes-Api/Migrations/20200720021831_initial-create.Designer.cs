@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Recipes_Api;
 
-namespace Recipes_API.Migrations
+namespace Recipes_Api.Migrations
 {
     [DbContext(typeof(RecipeContext))]
     [Migration("20200720021831_initial-create")]

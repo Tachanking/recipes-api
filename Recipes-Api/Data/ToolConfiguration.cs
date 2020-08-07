@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Recipes_Api.Models;
 using Recipes_Api.Utility;
 
 namespace Recipes_Api.Data

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Recipes_Api.Dto;
+using Recipes_Api.Models;
 using System.Linq;
 
 namespace Recipes_Api.Profiles
