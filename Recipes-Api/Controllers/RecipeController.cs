@@ -50,7 +50,7 @@ namespace Recipes_Api.Controllers
             if (id != recipeDto.Id)
                 return BadRequest(); // todo : error handling
 
-            var recipe = MapDtoToRecipe(recipeDto); // todo : fix automapper profile...
+            var recipe = _mapper.Map<Recipe>(recipeDto);
             var isUpdated = await _recipeService.PutRecipe(id, recipe);
 
             if (!isUpdated)
@@ -63,10 +63,9 @@ namespace Recipes_Api.Controllers
         [HttpPost]
         public async Task<ActionResult<RecipeDto>> PostRecipe(RecipeDto recipeDto)
         {
-            // todo : automapper profile...
             // todo : fix entity tracking issue
             // todo : error handling
-            var recipe = MapDtoToRecipe(recipeDto);
+            var recipe = _mapper.Map<Recipe>(recipeDto);
             await _recipeService.PostRecipe(recipe);
             return CreatedAtAction(nameof(PostRecipe), recipeDto);
         }
@@ -81,56 +80,6 @@ namespace Recipes_Api.Controllers
                 return NotFound();
 
             return NoContent();
-        }
-
-        private Recipe MapDtoToRecipe(RecipeDto recipeDto)
-        {
-            var recipeIngredientMeasurements = new List<RecipeIngredientMeasurement>();
-            foreach (var ingredient in recipeDto.Ingredients)
-            {
-                foreach (var measurement in ingredient.Measurements)
-                {
-                    recipeIngredientMeasurements.Add(new RecipeIngredientMeasurement()
-                    {
-                        IngredientId = ingredient.Id,
-                        Ingredient = new Ingredient()
-                        {
-                            Id = ingredient.Id,
-                            Name = ingredient.Name
-                        },
-                        MeasurementId = measurement.Id,
-                        Measurement = new Measurement()
-                        {
-                            Id = measurement.Id,
-                            Name = measurement.Name,
-                            Symbol = measurement.Symbol
-                        },
-                        Quantity = measurement.Quantity
-                    });
-                }
-            }
-
-            var recipeTools = new List<RecipeTool>();
-            foreach (var tool in recipeDto.Tools)
-            {
-                recipeTools.Add(new RecipeTool()
-                {
-                    Tool = new Tool()
-                    {
-                        Id = tool.Id,
-                        Name = tool.Name,
-                    },
-                    Quantity = tool.Quantity
-                });
-            }
-
-            return new Recipe()
-            {
-                Id = recipeDto.Id,
-                Name = recipeDto.Name,
-                RecipeIngredientMeasurement = recipeIngredientMeasurements,
-                RecipeTool = recipeTools
-            };
         }
     }
 }

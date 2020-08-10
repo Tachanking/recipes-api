@@ -1,14 +1,14 @@
-//using AutoMapper;
-using Xunit;
+﻿using AutoMapper;
+using NUnit.Framework;
 
 namespace Recipes.Api.Tests
 {
     public class MappingTests
     {
-        [Fact]
-        public void Test1()
-        {
-            //    var config = AutomapperConfiguration.Configure();
-        }
+        //[Test]
+        //public void Map_Should_HaveValidConfig()
+        //{
+        //    Mapper.Initialize(m => m.AddProfile<RecipeProfile>());
+        //}
     }
 }
